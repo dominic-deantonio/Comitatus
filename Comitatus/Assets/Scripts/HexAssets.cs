@@ -11,4 +11,5 @@ public class HexAssets : MonoBehaviour {
     public GameObject mountainHex;
     public GameObject hillHex;
     public GameObject riverDeltaStraight, riverDeltaRight, riverDeltaLeft;
+    public GameObject riverStraight, riverRight, riverLeft;
 }

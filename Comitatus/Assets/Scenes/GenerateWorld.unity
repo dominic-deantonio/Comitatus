@@ -1588,6 +1588,12 @@ MonoBehaviour:
     type: 3}
   riverDeltaLeft: {fileID: 2256208732017878760, guid: 778462d7e7374cf429cf11ecacf61602,
     type: 3}
+  riverStraight: {fileID: 6723031905745174377, guid: c868a319c044d4b42bcd1fd92ec3d4bd,
+    type: 3}
+  riverRight: {fileID: 4818245802084787522, guid: 90878acb280080945887bd20dcc58574,
+    type: 3}
+  riverLeft: {fileID: -927199367670048503, guid: e761dec323e76b84081b60b930ac98e3,
+    type: 3}
 --- !u!114 &946513195
 MonoBehaviour:
   m_ObjectHideFlags: 0
