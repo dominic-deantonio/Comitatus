@@ -1,0 +1,2 @@
+Reasons to use FBX rather than blend:
+https://forum.unity.com/threads/blend-vs-fbx.532563/
