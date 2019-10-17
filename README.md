@@ -1,2 +1,0 @@
-# Comitatus
-Forge an Empire
