@@ -606,7 +606,90 @@ public static class MapDataGeneration {
         }
     }
 
-    static void AssignRiverAsset(Hex h, HexAssets assets) {
+    static void AssignRiverAsset(Hex h, HexAssets assets) {/*
+        //Method runs if the tile is a river
+        
+        int tileType = -1; //0=delta, 1=river, 2=origin
+        List<int> riverNeighbors = new List<int>();
+
+        int direction = -1; //0=straight, 1=right, 2=left
+        GameObject[] riverBendAssets = { assets.riverStraight, assets.riverRight, assets.riverLeft };
+
+        //Determine which way the tile should bend and set the rotation of the tile
+        //if numriverneighbors < 2, this is either a delta or an origin 
+        //Set the rotation of the river delta to the sea tile. Only works if there is only 1 sea tile.
+        foreach (Vector3Int neighbor in h.neighbors) {
+            if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.River) {
+                riverNeighbors.Add(System.Array.IndexOf(h.neighbors, neighbor)); //Find the resulting neighbor vector in the array, and add it to the list
+            }
+        }
+
+        if (riverNeighbors.Count == 1) {//There was only one river neighbor
+            if (MapData.hexData[h.neighbors[riverNeighbors[0]]].terrain == (int)Hex.TerrainType.Sea) {//If the terrain of the only river neighbor is sea 
+                tileType = 0;
+            } else {//It is an origin
+                tileType = 2;
+            }
+            h.rotationVector = Hex.possibleRotations[riverNeighbors[0]]; //Select rotation vector from array using found neighbor as selection
+        } else {//It was a river tile, determine the bend
+            tileType = 1;
+            int bend = riverNeighbors[0] - riverNeighbors[1];
+
+            if (Mathf.Abs(bend) == 3) {//Straight
+                direction = 0;
+            } else if (bend == -2 || bend == 4) {//right
+                direction = 1;
+            } else if (bend == 2 ||bend == -4) {
+                direction = 2;
+            } else {
+                Debug.Log("Something went wrong assigning the river deltas");
+                h.hexAsset = assets.flatHex;
+            }
+
+        }
+
+        for (int i = 0; i < numRivNeighbors; i++) {
+
+        }
+
+
+
+
+            if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.Sea) {
+                seaNeighbor = System.Array.IndexOf(h.neighbors, neighbor); //Assigns the int of the found neighbor                    
+                h.rotationVector = Hex.possibleRotations[seaNeighbor];
+            }
+            if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.River) {
+                nextNeighbor = System.Array.IndexOf(h.neighbors, neighbor); //Gets the adjacent river neighbor to determine which direction the delta should bend
+            }
+        }
+
+
+
+
+        //if numriverneighbors = 2this is a mid section
+
+
+
+
+
+
+        //Determine what type of river tile
+
+        //Assign the river tile
+
+
+
+
+
+
+
+
+
+        
+
+
+        */
 
         //This is a river delta
         if (h.isCoast) {
