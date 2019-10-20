@@ -606,160 +606,66 @@ public static class MapDataGeneration {
         }
     }
 
-    static void AssignRiverAsset(Hex h, HexAssets assets) {/*
-        //Method runs if the tile is a river
-        
-        int tileType = -1; //0=delta, 1=river, 2=origin
-        List<int> riverNeighbors = new List<int>();
+    static int DetermineRiverBend(int neighbor1, int neighbor2) {
+        int bend = neighbor2 - neighbor1;
+        int direction;
 
-        int direction = -1; //0=straight, 1=right, 2=left
+        if (Mathf.Abs(bend) == 3) {//Straight
+            direction = 0;
+        } else if (bend == -2 || bend == 4) {//right
+            direction = 1;
+        } else if (bend == 2 || bend == -4) {//left
+            direction = 2;
+        } else {
+            Debug.Log("Failed to determine river direction");
+            direction = 0;
+        }
+
+        return direction;
+    }
+
+    static void AssignRiverAsset(Hex h, HexAssets assets) {
+        //Method runs if the tile is a river
+
         GameObject[] riverBendAssets = { assets.riverStraight, assets.riverRight, assets.riverLeft };
+        GameObject[] riverDeltaBendAssets = { assets.riverDeltaStraight, assets.riverDeltaRight, assets.riverDeltaLeft };
+        int deltaSeaNeighbor = -1;
+        int firstRivNeighbor = -1;
+        int secondRiverNeighbor = -1;
 
         //Determine which way the tile should bend and set the rotation of the tile
         //if numriverneighbors < 2, this is either a delta or an origin 
         //Set the rotation of the river delta to the sea tile. Only works if there is only 1 sea tile.
         foreach (Vector3Int neighbor in h.neighbors) {
-            if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.River) {
-                riverNeighbors.Add(System.Array.IndexOf(h.neighbors, neighbor)); //Find the resulting neighbor vector in the array, and add it to the list
-            }
-        }
-
-        if (riverNeighbors.Count == 1) {//There was only one river neighbor
-            if (MapData.hexData[h.neighbors[riverNeighbors[0]]].terrain == (int)Hex.TerrainType.Sea) {//If the terrain of the only river neighbor is sea 
-                tileType = 0;
-            } else {//It is an origin
-                tileType = 2;
-            }
-            h.rotationVector = Hex.possibleRotations[riverNeighbors[0]]; //Select rotation vector from array using found neighbor as selection
-        } else {//It was a river tile, determine the bend
-            tileType = 1;
-            int bend = riverNeighbors[0] - riverNeighbors[1];
-
-            if (Mathf.Abs(bend) == 3) {//Straight
-                direction = 0;
-            } else if (bend == -2 || bend == 4) {//right
-                direction = 1;
-            } else if (bend == 2 ||bend == -4) {
-                direction = 2;
-            } else {
-                Debug.Log("Something went wrong assigning the river deltas");
-                h.hexAsset = assets.flatHex;
-            }
-
-        }
-
-        for (int i = 0; i < numRivNeighbors; i++) {
-
-        }
-
-
-
-
             if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.Sea) {
-                seaNeighbor = System.Array.IndexOf(h.neighbors, neighbor); //Assigns the int of the found neighbor                    
-                h.rotationVector = Hex.possibleRotations[seaNeighbor];
-            }
-            if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.River) {
-                nextNeighbor = System.Array.IndexOf(h.neighbors, neighbor); //Gets the adjacent river neighbor to determine which direction the delta should bend
+
+                deltaSeaNeighbor = System.Array.IndexOf(h.neighbors, neighbor);
+
+            } else if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.River) {
+
+                if (firstRivNeighbor == -1) {
+                    //Should run only for first river found
+                    firstRivNeighbor = System.Array.IndexOf(h.neighbors, neighbor);
+                } else {
+                    secondRiverNeighbor = System.Array.IndexOf(h.neighbors, neighbor);
+                }
+
             }
         }
 
-
-
-
-        //if numriverneighbors = 2this is a mid section
-
-
-
-
-
-
-        //Determine what type of river tile
-
-        //Assign the river tile
-
-
-
-
-
-
-
-
-
-        
-
-
-        */
-
-        //This is a river delta
-        if (h.isCoast) {
-            int seaNeighbor = 0;
-            int riverNeighbor = 0;
-
-            //Set the rotation of the river delta to the sea tile. Only works if there is only 1 sea tile.
-            foreach (Vector3Int neighbor in h.neighbors) {
-                if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.Sea) {
-                    seaNeighbor = System.Array.IndexOf(h.neighbors, neighbor); //Assigns the int of the found neighbor                    
-                    h.rotationVector = Hex.possibleRotations[seaNeighbor];
-                }
-                if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.River) {
-                    riverNeighbor = System.Array.IndexOf(h.neighbors, neighbor); //Gets the adjacent river neighbor to determine which direction the delta should bend
-                }
-            }
-
-            //Determine which direction the river delta should bend
-            if (Mathf.Abs(seaNeighbor - riverNeighbor) == 3) {
-                h.hexAsset = assets.riverDeltaStraight;
-                Debug.Log("Straight");
-            } else if (seaNeighbor - riverNeighbor == -2 || seaNeighbor - riverNeighbor == 4) {
-                h.hexAsset = assets.riverDeltaRight;
-                Debug.Log("Right");
-            } else if (seaNeighbor - riverNeighbor == 2 || seaNeighbor - riverNeighbor == -4) {
-                h.hexAsset = assets.riverDeltaLeft;
-                Debug.Log("Left");
-            } else {
-                Debug.Log("Something went wrong assigning the river deltas");
-                h.hexAsset = assets.flatHex;
-            }
-
-        } else {//Not a river delta
-
-            /*
-            int prevRiverNeighbor = 0;
-            int nextRiverNeighbor = 0;
-
-            //Set the rotation of the river based on previous river tile. Only works if there is only 1 adjacent river tile.
-            foreach (Vector3Int neighbor in h.neighbors) {
-                if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.River) {
-                    prevRiverNeighbor = System.Array.IndexOf(h.neighbors, neighbor); //Assigns the int of the found neighbor                    
-                    h.rotationVector = Hex.possibleRotations[prevRiverNeighbor];
-                }
-                if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.River) {
-                    nextRiverNeighbor = System.Array.IndexOf(h.neighbors, neighbor); //Gets the adjacent river neighbor to determine which direction the delta should bend
-                }
-            }
-
-            //Determine which direction the river delta should bend
-            if (Mathf.Abs(prevRiverNeighbor - nextRiverNeighbor) == 3) {
-                h.hexAsset = assets.riverDeltaStraight;
-                Debug.Log("Straight");
-            } else if (prevRiverNeighbor - nextRiverNeighbor == -2 || prevRiverNeighbor - nextRiverNeighbor == 4) {
-                h.hexAsset = assets.riverDeltaRight;
-                Debug.Log("Right");
-            } else if (prevRiverNeighbor - nextRiverNeighbor == 2 || prevRiverNeighbor - nextRiverNeighbor == -4) {
-                h.hexAsset = assets.riverDeltaLeft;
-                Debug.Log("Left");
-            } else {
-                Debug.Log("Something went wrong assigning the river deltas");
-                h.hexAsset = assets.flatHex;
-            }
-
-    */
-
-
-
-
-            h.hexAsset = assets.riverStraight;
+        if (deltaSeaNeighbor != -1) {
+            //This is a river delta
+            h.hexAsset = riverDeltaBendAssets[DetermineRiverBend(firstRivNeighbor, deltaSeaNeighbor)];
+            h.rotationVector = Hex.possibleRotations[deltaSeaNeighbor];
+        } else if (secondRiverNeighbor != -1) {
+            //This is a river body
+            h.hexAsset = riverBendAssets[DetermineRiverBend(secondRiverNeighbor, firstRivNeighbor)];
+            h.rotationVector = Hex.possibleRotations[firstRivNeighbor];
+        } else {
+            //Is an origin
+            h.hexAsset = assets.mountainHex;
+            h.rotationVector = Hex.possibleRotations[firstRivNeighbor];
         }
     }
 }
+
