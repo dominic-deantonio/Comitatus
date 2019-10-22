@@ -214,29 +214,7 @@ public static class MapDataGeneration {
     }
 
     public static void GenerateTemperatureData() {
-
-        /*
-        float lattitudeTemp;
-        float elevationVal; //float from lerp needed to multiply against the lattitudinal temp based on elevation (mountains are colder)
-        float currentElevation; //used to divide against the highest elevation to determine elevation coldness factor (lerp);
-        int seedHash = ProcessSeed(12450);
-        MapPreferences pref = Object.FindObjectOfType<MapPreferences>();
-        for (int x = 0; x < MapData.width; x++) {
-            for (int z = 0; z < MapData.height; z++) {
-                Vector3Int currentPos = new Vector3Int(x, 0, z);
-                if (MapData.hexData[currentPos].isAboveSeaLevel) {
-                    float sample = 0;
-                    lattitudeTemp = 1 - (float)currentPos.z / MapData.height;
-                    elevationVal = MapData.hexData[currentPos].elevation * pref.tempElevInfluence;
-                    sample = Mathf.Clamp01(lattitudeTemp - elevationVal);
-                    MapData.hexData[currentPos].temperature = lattitudeTemp;
-                }
-            }
-        }
-        */
-
-
-
+  
         int seedHash = ProcessSeed(12450);
         MapPreferences pref = Object.FindObjectOfType<MapPreferences>();
         float highestTemp = float.MinValue;
@@ -249,10 +227,10 @@ public static class MapDataGeneration {
                 float scaleX = (float)x / MapData.width * pref.temperatureScale + seedHash;
                 float scaleZ = (float)z / MapData.height * pref.temperatureScale + seedHash;
                 float latTemp = 1 - (float)z / MapData.height;
-                float elevTemp = 1 - MapData.hexData[pos].elevation / 1;
+                //float elevTemp = 1 - MapData.hexData[pos].elevation / 1; //This creates low temp exclaves in hot regions which doesn't really make sense
                 float perlinVal = pref.tempPerlinInfluence * Mathf.PerlinNoise(scaleX, scaleZ);
 
-                float currentTemp = latTemp * elevTemp + perlinVal;
+                float currentTemp = latTemp /** elevTemp */+ perlinVal;
 
                 values[x, z] = currentTemp;
 
@@ -663,7 +641,7 @@ public static class MapDataGeneration {
             h.rotationVector = Hex.possibleRotations[firstRivNeighbor];
         } else {
             //Is an origin
-            h.hexAsset = assets.mountainHex;
+            h.hexAsset = assets.riverOrigin;
             h.rotationVector = Hex.possibleRotations[firstRivNeighbor];
         }
     }
