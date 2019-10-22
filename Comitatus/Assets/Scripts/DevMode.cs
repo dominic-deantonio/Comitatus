@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class DevMode : MonoBehaviour {
 
-    public static bool isActive = false;    
+    public static bool isActive = false;
     public GameObject devPanel;
     public Grid grid;
 
@@ -42,11 +42,11 @@ public class DevMode : MonoBehaviour {
             DisableMapmodes();
             previousMap = null;
         }
- 
+
     }
 
     public void DisableMapmodes() {
-        foreach (TilemapRenderer map in grid.GetComponentsInChildren<TilemapRenderer>()) {            
+        foreach (TilemapRenderer map in grid.GetComponentsInChildren<TilemapRenderer>()) {
             map.enabled = false;
         }
     }
@@ -55,13 +55,13 @@ public class DevMode : MonoBehaviour {
         if (previousMap != t) {
             nextMapmodeClick = true;
         }
-            if (nextMapmodeClick) {
-                t.enabled = true;
-                nextMapmodeClick = false;
-            } else {
-                t.enabled = false;
-                nextMapmodeClick = true;
-            }
+        if (nextMapmodeClick) {
+            t.enabled = true;
+            nextMapmodeClick = false;
+        } else {
+            t.enabled = false;
+            nextMapmodeClick = true;
+        }
 
         previousMap = t;
     }
@@ -81,14 +81,14 @@ public class DevMode : MonoBehaviour {
 
     void DisplayDevPanelInfo() {
         string hexAndMapInfo = "No map info to display";
-        string tip = "\n\nF1 to generate new map, Tab to close dev mode";        
+        string tip = "\n\nF1 to generate new map, Tab to close dev mode";
 
         if (MapData.didGenerateMap) {
             hexRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 worldPoint = hexRay.GetPoint(-hexRay.origin.y / hexRay.direction.y);
             Vector3Int position = grid.WorldToCell(worldPoint);
-            hexAndMapInfo = "-----Map Data-----\n" + MapData.DisplayMapInfo() +
-                                   "\n\n-----Hex Data-----\n" + MapData.GetHexInfo(position);
+            hexAndMapInfo = "-----Hex Data-----\nCoord: " + position.x + ", " + position.y + "\n" + MapData.GetHexInfo(position) +
+                            "\n\n-----Map Data-----\n" + MapData.DisplayMapInfo();
         }
 
         hexInfoDisplay.text = hexAndMapInfo + tip;

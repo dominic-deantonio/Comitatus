@@ -146,7 +146,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 34801724}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1325828334}
@@ -1186,7 +1186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65d90f932455ba6479b9efeb0caa573d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: 4
+  mapSize: 2
   seed: something
   randomizeSeed: 1
   setCamPosition: 1
@@ -1198,7 +1198,7 @@ MonoBehaviour:
   fertilityScale: 7
   rainfallScale: 7
   temperatureScale: 7
-  tempPerlinInfluence: 0.15
+  tempPerlinInfluence: 0.5
   relativeTemp: 0.5
   seaLevel: 0.4
   percentBadLand: 0.3
@@ -1594,6 +1594,8 @@ MonoBehaviour:
     type: 3}
   riverLeft: {fileID: -927199367670048503, guid: e761dec323e76b84081b60b930ac98e3,
     type: 3}
+  riverOrigin: {fileID: 1330990386263703566, guid: 3f0daef6856c0ee43bbb6ae59f68bdf6,
+    type: 3}
 --- !u!114 &946513195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1693,7 +1695,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1084895086}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1325828334}
@@ -2636,7 +2638,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1993055244}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1325828334}

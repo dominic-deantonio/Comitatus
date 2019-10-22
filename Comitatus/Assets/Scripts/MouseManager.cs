@@ -10,6 +10,8 @@ public class MouseManager : MonoBehaviour {
     Ray ray;
 
     public void Update() {
+
+
         if (displayTileCoord) {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 worldPoint = ray.GetPoint(-ray.origin.y / ray.direction.y);

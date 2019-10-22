@@ -561,9 +561,6 @@ public static class MapDataGeneration {
                 }
             }
         }
-
-        Debug.Log(MapData.highestElevation);
-
     }
 
     public static void AssignAssets() {
