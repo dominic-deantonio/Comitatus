@@ -477,8 +477,11 @@ public static class MapDataGeneration {
                     //Get the highest elevation neighbor
                     foreach (Vector3Int pathCandidate in pathCandidates) {
                         if (MapData.hexData[pathCandidate].elevation > nextPointElevation) {
-                            nextPoint = pathCandidate;
-                            nextPointElevation = MapData.hexData[pathCandidate].elevation;
+                            if (!MapData.hexData[pathCandidate].isCoast) {
+                                //Assigns the next highest point if it is not a coast hex.
+                                nextPoint = pathCandidate;
+                                nextPointElevation = MapData.hexData[pathCandidate].elevation;
+                            }                            
                         } else {
                             //There is no higher ground. Add the previous point as an origin
                             riverOrigins.Add(possiblePath[possiblePath.Count - 1]);
@@ -591,7 +594,7 @@ public static class MapDataGeneration {
         } else if (bend == 2 || bend == -4) {//left
             direction = 2;
         } else {
-            Debug.Log("Failed to determine river direction at: " + neighbor1 + ", "+ neighbor2);
+            Debug.Log("Failed to determine river direction with result: "+ (neighbor2-neighbor1));
             direction = 0;
         }
 
