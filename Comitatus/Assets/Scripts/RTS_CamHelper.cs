@@ -56,7 +56,7 @@ public class RTS_CamHelper : MonoBehaviour {
 
     public void ToggleZoom() {
         if (!lockZoom) {
-            cam.minHeight = 1f;
+            cam.minHeight = .7f;
         } else {
             cam.minHeight = continentLevel;
         }

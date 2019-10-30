@@ -8,7 +8,7 @@ public class MapGeneration : MonoBehaviour {
     public Grid grid;
     public Tile tileToSet;
     public HexAssets assets;
-    public GameObject hexContainer;
+    public GameObject hexContainer, natureContainer;
     public RTS_CamHelper camHelper;
     public Tilemap fertilityMap, rainfallMap, temperatureMap;
 
@@ -31,8 +31,10 @@ public class MapGeneration : MonoBehaviour {
         MapDataGeneration.GenerateCoastAndSeaData();
         MapDataGeneration.GenerateRiverData();
         MapDataGeneration.GenerateRemainingTerrain();
-        MapDataGeneration.AssignAssets();
-        DisplayTiles();
+        MapDataGeneration.AssignHexTerrain();
+        MapDataGeneration.AssignHexNature();
+        InstantiateHexes();
+        InstantiateNature();
         CreateMapModes();
         camHelper.CalculateBounds();
         camHelper.SetInitialPosition();
@@ -40,16 +42,26 @@ public class MapGeneration : MonoBehaviour {
         MapData.didGenerateMap = true;
     }
 
-    public void DisplayTiles() {
+    public void InstantiateHexes() {
         HexMaterials materials = GameObject.FindObjectOfType<HexMaterials>();
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
-            if (hex.Value.isAboveSeaLevel || (hex.Value.terrain == (int)Hex.TerrainType.River && hex.Value.isCoast)) {
+            if (hex.Value.isAboveSeaLevel) {
                 Vector3 position = grid.GetCellCenterWorld(new Vector3Int(hex.Key.x, hex.Key.z, 0));
                 GameObject hexToSpawn = hex.Value.hexAsset;//The hex's assigned asset
                 Quaternion rotation = Quaternion.Euler(hex.Value.rotationVector);//The hex's assigned rotation vector3
                 GameObject gen = Instantiate(hexToSpawn, position, rotation, hexContainer.transform);
                 gen.GetComponent<Renderer>().material = materials.hexMaterials[hex.Value.biome];
-                //gen.name = "" + hex.Value.hexAsset.name + (Hex.Biome)hex.Value.biome;
+            }
+        }
+    }
+
+    public void InstantiateNature() {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+            if (hex.Value.isAboveSeaLevel && hex.Value.terrain == (int)Hex.TerrainType.Flat && hex.Value.natureAsset != null) {
+                Vector3 position = grid.GetCellCenterWorld(new Vector3Int(hex.Key.x, hex.Key.z, 0));
+                GameObject natureToSpawn = hex.Value.natureAsset;//The hex's assigned nature asset
+                Quaternion rotation = Quaternion.Euler(new Vector3(0, hex.Value.rotationVector.y, 0));//Must use the z as the y for the rotation
+                GameObject gen = Instantiate(natureToSpawn, position, rotation, natureContainer.transform);
             }
         }
     }
@@ -102,8 +114,8 @@ public class MapGeneration : MonoBehaviour {
                 Destroy(child.gameObject);
             }
         }
-        foreach (Transform child in hexContainer.GetComponentsInChildren<Transform>()) {
-            if (child.transform != hexContainer.transform) {
+        foreach (Transform child in natureContainer.GetComponentsInChildren<Transform>()) {
+            if (child.transform != natureContainer.transform) {
                 Destroy(child.gameObject);
             }
         }

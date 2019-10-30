@@ -563,8 +563,7 @@ public static class MapDataGeneration {
         }
     }
 
-    public static void AssignAssets() {
-        HexMaterials materials = GameObject.FindObjectOfType<HexMaterials>();
+    public static void AssignHexTerrain() {
         HexAssets assets = GameObject.FindObjectOfType<HexAssets>();
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
             if (hex.Value.isAboveSeaLevel) {
@@ -592,7 +591,7 @@ public static class MapDataGeneration {
         } else if (bend == 2 || bend == -4) {//left
             direction = 2;
         } else {
-            Debug.Log("Failed to determine river direction");
+            Debug.Log("Failed to determine river direction at: " + neighbor1 + ", "+ neighbor2);
             direction = 0;
         }
 
@@ -640,6 +639,24 @@ public static class MapDataGeneration {
             //Is an origin
             h.hexAsset = assets.riverOrigin;
             h.rotationVector = Hex.possibleRotations[firstRivNeighbor];
+        }
+    }
+
+    public static void AssignHexNature() {
+        HexNature nature = GameObject.FindObjectOfType<HexNature>();
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+            if (hex.Value.isAboveSeaLevel) {
+                if (hex.Value.biome == (int)Hex.Biome.Forest) {
+                    if (hex.Value.terrain == (int)Hex.TerrainType.Flat) {
+                        hex.Value.natureAsset = nature.flatForest;
+                    } 
+                }
+                if (hex.Value.biome == (int)Hex.Biome.Taiga) {
+                    if (hex.Value.terrain == (int)Hex.TerrainType.Flat) {
+                        hex.Value.natureAsset = nature.flatTaiga;
+                    }
+                }
+            }
         }
     }
 }

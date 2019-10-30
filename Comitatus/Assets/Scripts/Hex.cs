@@ -23,7 +23,7 @@ public class Hex {
     public Vector3Int[] neighbors = new Vector3Int[6];
     public Vector3 rotationVector = new Vector3();//stores a random vector3 for use with euler rotation.
     public Material material;
-    public GameObject hexAsset;
+    public GameObject hexAsset, natureAsset;
 
     //These are the only possible rotations for a hexagon
     public static readonly Vector3[] possibleRotations = {
