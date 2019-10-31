@@ -1546,11 +1546,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beb0efbfb8f446a48a4b6d7739bea81a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flatForest: {fileID: 7915435647624494105, guid: 3aee2abd47256d24f9f4772dea3a3f9d,
-    type: 3}
-  flatTaiga: {fileID: 9153072060247119497, guid: f01e6a91550929c48aa8957000c63bde,
-    type: 3}
-  flatJungle: {fileID: 0}
+  flatNature:
+  - {fileID: 1912683265885018681, guid: 4b3ab9030f16ccd4cb16e9f575584060, type: 3}
+  - {fileID: 7915435647624494105, guid: 3aee2abd47256d24f9f4772dea3a3f9d, type: 3}
+  - {fileID: 9153072060247119497, guid: f01e6a91550929c48aa8957000c63bde, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  hillNature: []
+  riverNature: []
 --- !u!1 &1057764761
 GameObject:
   m_ObjectHideFlags: 0

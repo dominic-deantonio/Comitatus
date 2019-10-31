@@ -214,7 +214,7 @@ public static class MapDataGeneration {
     }
 
     public static void GenerateTemperatureData() {
-  
+
         int seedHash = ProcessSeed(12450);
         MapPreferences pref = Object.FindObjectOfType<MapPreferences>();
         float highestTemp = float.MinValue;
@@ -481,7 +481,7 @@ public static class MapDataGeneration {
                                 //Assigns the next highest point if it is not a coast hex.
                                 nextPoint = pathCandidate;
                                 nextPointElevation = MapData.hexData[pathCandidate].elevation;
-                            }                            
+                            }
                         } else {
                             //There is no higher ground. Add the previous point as an origin
                             riverOrigins.Add(possiblePath[possiblePath.Count - 1]);
@@ -594,7 +594,7 @@ public static class MapDataGeneration {
         } else if (bend == 2 || bend == -4) {//left
             direction = 2;
         } else {
-            Debug.Log("Failed to determine river direction with result: "+ (neighbor2-neighbor1));
+            Debug.Log("Failed to determine river direction with result: " + (neighbor2 - neighbor1));
             direction = 0;
         }
 
@@ -646,19 +646,12 @@ public static class MapDataGeneration {
     }
 
     public static void AssignHexNature() {
+        //Ensure this method always runs after the hex terrain is assigned
         HexNature nature = GameObject.FindObjectOfType<HexNature>();
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
-            if (hex.Value.isAboveSeaLevel) {
-                if (hex.Value.biome == (int)Hex.Biome.Forest) {
-                    if (hex.Value.terrain == (int)Hex.TerrainType.Flat) {
-                        hex.Value.natureAsset = nature.flatForest;
-                    } 
-                }
-                if (hex.Value.biome == (int)Hex.Biome.Taiga) {
-                    if (hex.Value.terrain == (int)Hex.TerrainType.Flat) {
-                        hex.Value.natureAsset = nature.flatTaiga;
-                    }
-                }
+            if (hex.Value.terrain == (int)Hex.TerrainType.Flat) { //Expand to different types of terrains as the assets are created.
+                GameObject[] natureBiome = nature.natureCollection[hex.Value.hexAsset];
+                hex.Value.natureAsset = natureBiome[hex.Value.biome];
             }
         }
     }
