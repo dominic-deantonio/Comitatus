@@ -1100,9 +1100,9 @@ MonoBehaviour:
   setCamPosition: 1
   terrainScale: 7
   hillThreshold: 0.448
-  mountThreshold: 0.142
+  mountThreshold: 0.25
   hillDensity: 5
-  mountainDensity: 7
+  mountainDensity: 6
   fertilityScale: 7
   rainfallScale: 7
   temperatureScale: 7
@@ -1110,7 +1110,7 @@ MonoBehaviour:
   relativeTemp: 0.5
   seaLevel: 0.4
   percentBadLand: 0.3
-  relativeWetness: 0.533
+  relativeWetness: 0.45
   numRivers: 2
 --- !u!114 &738055925
 MonoBehaviour:
@@ -1547,9 +1547,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flatNature:
-  - {fileID: 1912683265885018681, guid: 4b3ab9030f16ccd4cb16e9f575584060, type: 3}
-  - {fileID: 7915435647624494105, guid: 3aee2abd47256d24f9f4772dea3a3f9d, type: 3}
-  - {fileID: 9153072060247119497, guid: f01e6a91550929c48aa8957000c63bde, type: 3}
+  - {fileID: 3941585057508229693, guid: b58e7fd42f9299143baf148e7d84fc32, type: 3}
+  - {fileID: 8472266498631872266, guid: 3aee2abd47256d24f9f4772dea3a3f9d, type: 3}
+  - {fileID: 4138408129866426096, guid: f01e6a91550929c48aa8957000c63bde, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

@@ -18,7 +18,7 @@ public class MapPreferences : MonoBehaviour {
     public float terrainScale;
     [Range(0f, .5f)]
     public float hillThreshold;
-    [Range(0, .2f)]
+    [Range(0, .4f)]
     public float mountThreshold;
     [Range(0, 10)]
     public int hillDensity;
