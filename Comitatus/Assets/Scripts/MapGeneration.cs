@@ -57,10 +57,12 @@ public class MapGeneration : MonoBehaviour {
 
     public void InstantiateNature() {
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
-            if (hex.Value.isAboveSeaLevel && hex.Value.terrain == (int)Hex.TerrainType.Flat && hex.Value.natureAsset != null) {
+            if (hex.Value.isAboveSeaLevel &&
+                (hex.Value.terrain == (int)Hex.TerrainType.Flat || hex.Value.terrain == (int)Hex.TerrainType.River) &&
+                 hex.Value.natureAsset != null) {
                 Vector3 position = grid.GetCellCenterWorld(new Vector3Int(hex.Key.x, hex.Key.z, 0));
                 GameObject natureToSpawn = hex.Value.natureAsset;//The hex's assigned nature asset
-                Quaternion rotation = Quaternion.Euler(new Vector3(0, hex.Value.rotationVector.y, 0));//Must use the z as the y for the rotation
+                Quaternion rotation = Quaternion.Euler(hex.Value.rotationVector);
                 GameObject gen = Instantiate(natureToSpawn, position, rotation, natureContainer.transform);
             }
         }

@@ -647,12 +647,16 @@ public static class MapDataGeneration {
 
     public static void AssignHexNature() {
         //Ensure this method always runs after the hex terrain is assigned
+        GameObject[] natureBiome = new GameObject[] { };
         HexNature nature = GameObject.FindObjectOfType<HexNature>();
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
-            if (hex.Value.terrain == (int)Hex.TerrainType.Flat) { //Expand to different types of terrains as the assets are created.
-                GameObject[] natureBiome = nature.natureCollection[hex.Value.hexAsset];
-                hex.Value.natureAsset = natureBiome[hex.Value.biome];
-            }
+            if (hex.Value.terrain == (int)Hex.TerrainType.Flat ||
+                hex.Value.terrain == (int)Hex.TerrainType.River) { 
+                //Temporary if statement. Allow different terrains as assets are created. Remove when all exist
+
+                natureBiome = nature.natureCollection[hex.Value.hexAsset]; //First select the correct terrain nature array based on the assigned hex type
+                hex.Value.natureAsset = natureBiome[hex.Value.biome]; //Then select the correct nature for the terrain type
+            } 
         }
     }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4509183058753939247}
   - component: {fileID: 7903640816989969366}
   m_Layer: 0
-  m_Name: flatForestTemperate
+  m_Name: nature_forestFlat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8472266498631872266}
-  m_LocalRotation: {x: 4.0246723e-10, y: 0.99998987, z: -0.0000000218541, w: 0.004506052}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.00044788932, y: 0, z: -0.00091820647}
   m_LocalScale: {x: 9.552899, y: 9.552899, z: 9.552899}
   m_Children: []

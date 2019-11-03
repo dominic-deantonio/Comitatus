@@ -1101,7 +1101,7 @@ MonoBehaviour:
   terrainScale: 7
   hillThreshold: 0.448
   mountThreshold: 0.25
-  hillDensity: 5
+  hillDensity: 4
   mountainDensity: 6
   fertilityScale: 7
   rainfallScale: 7
@@ -1111,7 +1111,7 @@ MonoBehaviour:
   seaLevel: 0.4
   percentBadLand: 0.3
   relativeWetness: 0.45
-  numRivers: 2
+  numRivers: 4
 --- !u!114 &738055925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1488,23 +1488,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67671ab916099504b85762ec4268c6ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flatHex: {fileID: 8781851336341868686, guid: 8c905a35969677d438f0b2728bf4fbde, type: 3}
-  mountainHex: {fileID: 5131378066411192140, guid: 9623e85a5990a6f4997a8905a2779c7c,
+  flatHex: {fileID: 8900369082037086567, guid: c156e4eba7cfd30439b226afceb623e1, type: 3}
+  mountainHex: {fileID: 8595782477002989955, guid: ebf3ffa9d1fed2e4ea8adb9958ae6a36,
     type: 3}
-  hillHex: {fileID: 3323767042465861068, guid: 1f1e67eff45632748a101b2ad24f0d86, type: 3}
-  riverDeltaStraight: {fileID: 8531412992069439705, guid: 04d6d21eca0de644d8d6e3e59cad85fc,
+  hillHex: {fileID: 5142000177102747030, guid: 1f1e67eff45632748a101b2ad24f0d86, type: 3}
+  riverDeltaStraight: {fileID: 673880707725709515, guid: 738476e4f94963f45b341e6290c62671,
     type: 3}
-  riverDeltaRight: {fileID: 7773179810461400484, guid: fb3931a2e4759a1428a672d6147cb240,
+  riverDeltaRight: {fileID: 5700827821129889238, guid: 60baaccb83562e04aa77f195d0c70a52,
     type: 3}
-  riverDeltaLeft: {fileID: 5692198232521970169, guid: 5059db00657f56a40a829e68e97d2722,
+  riverDeltaLeft: {fileID: 5300313044900419765, guid: 8c9f7fd30248d3d47ae4fc80c66509c7,
     type: 3}
-  riverStraight: {fileID: 1643759595496178002, guid: c868a319c044d4b42bcd1fd92ec3d4bd,
+  riverStraight: {fileID: 5452498660897547579, guid: c868a319c044d4b42bcd1fd92ec3d4bd,
     type: 3}
-  riverRight: {fileID: 2527479834885148633, guid: 90878acb280080945887bd20dcc58574,
+  riverRight: {fileID: 5022555931643347735, guid: 90878acb280080945887bd20dcc58574,
     type: 3}
-  riverLeft: {fileID: 8614989219413760314, guid: 186ea5b2d2351e94796b8fd0658f1fa3,
+  riverLeft: {fileID: 7496485797667392952, guid: 186ea5b2d2351e94796b8fd0658f1fa3,
     type: 3}
-  riverOrigin: {fileID: 9198005218039079119, guid: cdde409c59a620244a01124aa1c3ec8e,
+  riverOrigin: {fileID: 2542960513898489577, guid: cdde409c59a620244a01124aa1c3ec8e,
     type: 3}
 --- !u!114 &946513195
 MonoBehaviour:
@@ -1549,7 +1549,7 @@ MonoBehaviour:
   flatNature:
   - {fileID: 3941585057508229693, guid: b58e7fd42f9299143baf148e7d84fc32, type: 3}
   - {fileID: 8472266498631872266, guid: 3aee2abd47256d24f9f4772dea3a3f9d, type: 3}
-  - {fileID: 4138408129866426096, guid: f01e6a91550929c48aa8957000c63bde, type: 3}
+  - {fileID: 7220727007414703720, guid: f01e6a91550929c48aa8957000c63bde, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1563,7 +1563,38 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   hillNature: []
-  riverNature: []
+  riverNature:
+  - {fileID: 2025001003743642868, guid: 8c4d052785f010a4a85f4bd2f9b6e091, type: 3}
+  - {fileID: 6461195720170423636, guid: 8fe24cf209224e046be3704400255571, type: 3}
+  - {fileID: 3271988308522025512, guid: 432096588efb5f84290122635c68d563, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  riverDeltaNature:
+  - {fileID: 409563570616529159, guid: 6fae31b8a3800504290f53505bef7499, type: 3}
+  - {fileID: 7402559286128518642, guid: c21ec564f378d274f999845b84e019fb, type: 3}
+  - {fileID: 3439707502847565009, guid: ca96b94f24a2cf3429906927b09f12c6, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &1057764761
 GameObject:
   m_ObjectHideFlags: 0
@@ -1760,7 +1791,7 @@ GameObject:
   - component: {fileID: 1249899871}
   - component: {fileID: 1249899870}
   m_Layer: 0
-  m_Name: map_Sea
+  m_Name: sea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1819,12 +1850,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1249899868}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 81.76, y: -0.02, z: 51.72}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 66.59032, y: -0.17416896, z: 49.959652}
   m_LocalScale: {x: 71.61855, y: 1, z: 115.95686}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 1963784147}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1314083069
 PrefabInstance:
@@ -2164,7 +2195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1423616698}
   m_Layer: 0
-  m_Name: map_Nature
+  m_Name: nature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2178,11 +2209,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1423616697}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -15.169689, y: -0.15416896, z: -1.7603483}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 1963784147}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1445707641 stripped
 RectTransform:
@@ -2282,7 +2313,7 @@ RectTransform:
   m_Children:
   - {fileID: 386310911}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2299,7 +2330,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1544345605}
   m_Layer: 0
-  m_Name: map_Hexes
+  m_Name: hexes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2313,11 +2344,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1544345604}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -15.169689, y: -0.15416896, z: -1.7603483}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 1963784147}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1624606287
 PrefabInstance:
@@ -2586,6 +2617,39 @@ Transform:
   m_Father: {fileID: 1360607333}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1963784146
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1963784147}
+  m_Layer: 0
+  m_Name: Map
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1963784147
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963784146}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 15.169689, y: 0.15416896, z: 1.7603483}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1544345605}
+  - {fileID: 1423616698}
+  - {fileID: 1249899872}
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1993055244
 GameObject:
   m_ObjectHideFlags: 0
@@ -2789,7 +2853,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2132553825
 GameObject:

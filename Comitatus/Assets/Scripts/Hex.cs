@@ -27,12 +27,17 @@ public class Hex {
 
     //These are the only possible rotations for a hexagon
     public static readonly Vector3[] possibleRotations = {
-        new Vector3(-90, 300, 0),
-        new Vector3(-90, 240, 0),
-        new Vector3(-90, 180, 0),
-        new Vector3(-90, 120, 0),
-        new Vector3(-90, 60, 0),
-        new Vector3(-90, 0, 0)
+        new Vector3(0, 0, 0),
+        new Vector3(0, 300, 0),
+        new Vector3(0, 240, 0),
+        new Vector3(0, 180, 0),
+        new Vector3(0, 120, 0),
+        new Vector3(0, 60, 0),
+
+        //They are added in this order because the getNeighbors method starts at the top left of the hex
+        //the rotations are as though rotating right. Don't love it.
+
+
     };
 
     public string GetInfo() {
