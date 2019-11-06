@@ -38,8 +38,8 @@ public class RTS_CamHelper : MonoBehaviour {
     }
 
     public void CalculateBounds() {
-        cam.limitX = MapData.width / 3;
-        cam.limitY = MapData.height * .35f;
+        cam.limitX = MapData.width *.4F;
+        cam.limitY = MapData.height * .43f; //Perfect distance for being able to see northenmost hexes
         cam.maxHeight = MapData.height / heightNormalizer;
     }
 
@@ -56,7 +56,7 @@ public class RTS_CamHelper : MonoBehaviour {
 
     public void ToggleZoom() {
         if (!lockZoom) {
-            cam.minHeight = .7f;
+            cam.minHeight = .5f;
         } else {
             cam.minHeight = continentLevel;
         }
