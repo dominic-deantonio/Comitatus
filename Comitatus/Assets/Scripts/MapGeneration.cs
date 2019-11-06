@@ -58,7 +58,7 @@ public class MapGeneration : MonoBehaviour {
     public void InstantiateNature() {
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
             if (hex.Value.isAboveSeaLevel &&
-                (hex.Value.terrain == (int)Hex.TerrainType.Flat || hex.Value.terrain == (int)Hex.TerrainType.River) &&
+                (hex.Value.terrain == (int)Hex.TerrainType.Flat || hex.Value.terrain == (int)Hex.TerrainType.River || hex.Value.terrain == (int)Hex.TerrainType.Hill) &&
                  hex.Value.natureAsset != null) {
                 Vector3 position = grid.GetCellCenterWorld(new Vector3Int(hex.Key.x, hex.Key.z, 0));
                 GameObject natureToSpawn = hex.Value.natureAsset;//The hex's assigned nature asset

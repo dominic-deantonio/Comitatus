@@ -1491,7 +1491,7 @@ MonoBehaviour:
   flatHex: {fileID: 8900369082037086567, guid: c156e4eba7cfd30439b226afceb623e1, type: 3}
   mountainHex: {fileID: 8595782477002989955, guid: ebf3ffa9d1fed2e4ea8adb9958ae6a36,
     type: 3}
-  hillHex: {fileID: 5142000177102747030, guid: 1f1e67eff45632748a101b2ad24f0d86, type: 3}
+  hillHex: {fileID: 4837553817186490468, guid: 738b6ad9a3047bc4aadb4fa011f1ead4, type: 3}
   riverDeltaStraight: {fileID: 673880707725709515, guid: 738476e4f94963f45b341e6290c62671,
     type: 3}
   riverDeltaRight: {fileID: 5700827821129889238, guid: 60baaccb83562e04aa77f195d0c70a52,
@@ -1562,7 +1562,22 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  hillNature: []
+  hillNature:
+  - {fileID: 8533704808293532797, guid: 50d6656c1d9404c41a0d113a5c92bb72, type: 3}
+  - {fileID: 5756514733334290050, guid: afb331a6021e5844d8c2f60d8d08e02c, type: 3}
+  - {fileID: 1099269419451358704, guid: d71ceac72a5ba044aa002a65606aefc5, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   riverNature:
   - {fileID: 2025001003743642868, guid: 8c4d052785f010a4a85f4bd2f9b6e091, type: 3}
   - {fileID: 6461195720170423636, guid: 8fe24cf209224e046be3704400255571, type: 3}

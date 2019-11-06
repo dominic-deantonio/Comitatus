@@ -651,7 +651,8 @@ public static class MapDataGeneration {
         HexNature nature = GameObject.FindObjectOfType<HexNature>();
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
             if (hex.Value.terrain == (int)Hex.TerrainType.Flat ||
-                hex.Value.terrain == (int)Hex.TerrainType.River) { 
+                hex.Value.terrain == (int)Hex.TerrainType.River ||
+                hex.Value.terrain == (int)Hex.TerrainType.Hill) { 
                 //Temporary if statement. Allow different terrains as assets are created. Remove when all exist
 
                 natureBiome = nature.natureCollection[hex.Value.hexAsset]; //First select the correct terrain nature array based on the assigned hex type
