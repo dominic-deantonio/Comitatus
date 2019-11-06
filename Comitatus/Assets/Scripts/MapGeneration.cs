@@ -10,7 +10,7 @@ public class MapGeneration : MonoBehaviour {
     public HexAssets assets;
     public GameObject hexContainer, natureContainer;
     public RTS_CamHelper camHelper;
-    public Tilemap fertilityMap, rainfallMap, temperatureMap;
+    public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap;
 
     //Keep an eye out for dependencies here - make sure the order stays correct as methods evolve.
     public void GenerateMap() {
@@ -91,6 +91,10 @@ public class MapGeneration : MonoBehaviour {
                 clr = new Color(r, .3f, b);
                 tileToSet.color = clr;
                 temperatureMap.SetTile(position, tileToSet);
+                //Do elevation
+                clr = new Color(hex.Value.elevation, hex.Value.elevation, 0);
+                tileToSet.color = clr;
+                elevationMap.SetTile(position, tileToSet);
             }
         }
     }

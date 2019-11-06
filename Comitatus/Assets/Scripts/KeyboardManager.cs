@@ -34,6 +34,10 @@ public class KeyboardManager : MonoBehaviour {
                 dev.DisableMapmodes();
                 dev.ToggleMapmode(GameObject.Find("TemperatureMap").GetComponent<TilemapRenderer>());
             }
+            if (Input.GetKeyDown(KeyCode.F4)) {
+                dev.DisableMapmodes();
+                dev.ToggleMapmode(GameObject.Find("ElevationMap").GetComponent<TilemapRenderer>());
+            }
         }
 
 
