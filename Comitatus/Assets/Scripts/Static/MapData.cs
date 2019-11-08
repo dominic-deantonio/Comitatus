@@ -7,7 +7,7 @@ using UnityEngine;
 //this should persist throughout the game
 public static class MapData {
 
-    public static int width, height;
+    public static int width, height, numLandHexes, numHexes;
     public static string seed;
     public static Dictionary<Vector3Int, Hex> hexData = new Dictionary<Vector3Int, Hex>();
     public static Dictionary<Vector3Int, List<Vector3Int>> rivers = new Dictionary<Vector3Int, List<Vector3Int>>();
@@ -95,5 +95,18 @@ public static class MapData {
                 }
             }
         }
+    }
+
+    public static void AssignGlobalVariables() {
+        numLandHexes = 0;
+        numHexes = 0;
+
+        foreach (KeyValuePair<Vector3Int, Hex> hex in hexData) {
+            numHexes++;
+            if (hex.Value.isAboveSeaLevel) {
+                numLandHexes++;
+            }
+        }
+        
     }
 }

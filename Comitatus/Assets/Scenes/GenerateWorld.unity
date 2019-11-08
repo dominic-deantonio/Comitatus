@@ -718,7 +718,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 1084895088}
+      objectReference: {fileID: 150662439}
     - target: {fileID: 4131703427278463799, guid: 8fe308e40cacaba4da2b4e4abf0c7cf0,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -1464,7 +1464,7 @@ MonoBehaviour:
   setCamPosition: 1
   terrainScale: 7
   hillThreshold: 0.448
-  mountThreshold: 0.25
+  mountThreshold: 0.191
   hillDensity: 4
   mountainDensity: 6
   fertilityScale: 7
@@ -1472,9 +1472,9 @@ MonoBehaviour:
   temperatureScale: 7
   tempPerlinInfluence: 0.5
   relativeTemp: 0.5
-  seaLevel: 0.4
+  seaLevel: 0.45
   percentBadLand: 0.3
-  relativeWetness: 0.45
+  relativeWetness: 0.35
   numRivers: 4
 --- !u!114 &738055925
 MonoBehaviour:
@@ -1498,6 +1498,7 @@ MonoBehaviour:
   rainfallMap: {fileID: 34801727}
   temperatureMap: {fileID: 1084895089}
   elevationMap: {fileID: 1720410147}
+  cultureMap: {fileID: 150662440}
 --- !u!1001 &750091409
 PrefabInstance:
   m_ObjectHideFlags: 0

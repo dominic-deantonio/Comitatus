@@ -10,7 +10,7 @@ public class MapGeneration : MonoBehaviour {
     public HexAssets assets;
     public GameObject hexContainer, natureContainer;
     public RTS_CamHelper camHelper;
-    public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap;
+    public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap, cultureMap;
 
     //Keep an eye out for dependencies here - make sure the order stays correct as methods evolve.
     public void GenerateMap() {
@@ -18,6 +18,7 @@ public class MapGeneration : MonoBehaviour {
         MapData.ClearData();
         MapData.GetPreferences();
         PositionGrid();
+        //Data generation portion
         MapDataGeneration.GenerateBaseMap();
         MapDataGeneration.GenerateElevationData();
         MapDataGeneration.SmoothElevationEdgesData();
@@ -30,16 +31,30 @@ public class MapGeneration : MonoBehaviour {
         MapDataGeneration.GenerateNeighborData();
         MapDataGeneration.GenerateCoastAndSeaData();
         MapDataGeneration.GenerateRiverData();
+        MapData.AssignGlobalVariables();
+        CivDataGeneration.GenerateCultureRegionData();
+
+        //Physical generation portion
         MapDataGeneration.GenerateRemainingTerrain();
         MapDataGeneration.AssignHexTerrain();
-        MapDataGeneration.AssignHexNature();
+        MapDataGeneration.AssignHexNature();        
         InstantiateHexes();
         InstantiateNature();
         CreateMapModes();
         camHelper.CalculateBounds();
         camHelper.SetInitialPosition();
-        DebugMap();
         MapData.didGenerateMap = true;
+        DebugData();
+    }
+
+    void DebugData() {
+        /*
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+            if (hex.Value.isAboveSeaLevel) {
+                Debug.Log((Culture.Name)hex.Value.culture);
+   
+            }
+        }*/
     }
 
     public void InstantiateHexes() {
@@ -72,6 +87,9 @@ public class MapGeneration : MonoBehaviour {
         rainfallMap.ClearAllTiles();
         fertilityMap.ClearAllTiles();
         temperatureMap.ClearAllTiles();
+        elevationMap.ClearAllTiles();
+        cultureMap.ClearAllTiles();
+        
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
             if (hex.Value.isAboveSeaLevel) {
                 Vector3Int position = new Vector3Int(hex.Key.x, hex.Key.z, 0);
@@ -95,23 +113,20 @@ public class MapGeneration : MonoBehaviour {
                 clr = new Color(hex.Value.elevation, hex.Value.elevation, 0);
                 tileToSet.color = clr;
                 elevationMap.SetTile(position, tileToSet);
+                //Do culture regions
+                if (hex.Value.culture != -1) {
+                    clr = Culture.color[hex.Value.culture];
+                    tileToSet.color = clr;
+                    cultureMap.SetTile(position, tileToSet);
+                }
             }
         }
-    }
+    }   
 
     public void PositionGrid() {
         Vector3 pos = new Vector3(-MapData.width / 2.33f, 0, -MapData.height / 4);
         grid.transform.position = pos;
 
-    }
-
-    void DebugMap() {
-        /*
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
-            //Debug.Log();
-        }
-        Debug.Log();
-        */
     }
 
     void ClearMap() {

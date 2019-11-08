@@ -38,6 +38,10 @@ public class KeyboardManager : MonoBehaviour {
                 dev.DisableMapmodes();
                 dev.ToggleMapmode(GameObject.Find("ElevationMap").GetComponent<TilemapRenderer>());
             }
+            if (Input.GetKeyDown(KeyCode.F5)) {
+                dev.DisableMapmodes();
+                dev.ToggleMapmode(GameObject.Find("CultureMap").GetComponent<TilemapRenderer>());
+            }
         }
 
 

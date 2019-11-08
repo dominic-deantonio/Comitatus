@@ -18,7 +18,7 @@ public class Hex {
     }
 
     public float fertility, elevation, rainfall, temperature;
-    public int biome, terrain, model;
+    public int biome, terrain, model, culture = -1;
     public bool isAboveSeaLevel, isCoast;
     public Vector3Int[] neighbors = new Vector3Int[6];
     public Vector3 rotationVector = new Vector3();//stores a random vector3 for use with euler rotation.
@@ -36,14 +36,13 @@ public class Hex {
 
         //They are added in this order because the getNeighbors method starts at the top left of the hex
         //the rotations are as though rotating right. Don't love it.
-
-
     };
 
     public string GetInfo() {
         string s = "" +
-            "Biome: " + (Hex.Biome)biome +
+            "Biome: " + (Biome)biome +
             "\nTerrain: " + (TerrainType)terrain +
+            "\nCulture: " + (Culture.Name)culture +
             "\nFert: " + Mathf.Round(fertility * 100) +
             ", Elev: " + Mathf.Round(elevation * 100) +
             ", Rain: " + Mathf.Round(rainfall * 100) +
