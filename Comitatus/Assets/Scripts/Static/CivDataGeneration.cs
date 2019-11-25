@@ -48,32 +48,33 @@ public static class CivDataGeneration {
         allPossStartingLocs[5] = possStartHexesAfonic;
 
         //Select a random possible starting position from the list, then test for adequacy
-        for (int i = 0; i < allPossStartingLocs.Length; i++) {
-            Vector3Int hexToSet = allPossStartingLocs[i][Random.Range(0, allPossStartingLocs[i].Count)];
-            MapData.hexData[hexToSet].culture = i;            
-        }
+        int hexesPerCulture = MapData.numLandHexes / 6;
 
-        /*
-        
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
-            if (hex.Value.isAboveSeaLevel) {
-                hex.Value.culture = currentCulture;
 
-                completedAssn++;
+        for (int i = 0; i < allPossStartingLocs.Length; i++) {            
+            bool passedTest = false;
 
-                //Cycle through required num times
-                if (completedAssn >= hexesPerCulture) {
-                    completedAssn = 0;
+            //Set the center point for the cultural region
+            while (passedTest == false) {
+                Vector3Int hexToSet = allPossStartingLocs[i][Random.Range(0, allPossStartingLocs[i].Count)];
 
-                    if (currentCulture < 5) {
-                        //If land hexes don't divide evenly, the last culture will receive the remainder
-                        //TODO: revise this
-                        currentCulture++;
-                    }
-                }
+                if (MapData.hexData[hexToSet].terrain != (int)Hex.TerrainType.Mountain) {
+                    MapData.hexData[hexToSet].culture = i;
+                    passedTest = true;
+                }                
             }
+            /*
+            //Expand the region based on the center
+            int numAssigned = 0;
+            while (numAssigned < hexesPerCulture) {
+                //assign adjacent hexes
+
+
+                numAssigned++;
+            }
+            */
         }
-        */
+
 
 
 
