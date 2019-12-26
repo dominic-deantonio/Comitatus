@@ -42,8 +42,11 @@ public class MapPreferences : MonoBehaviour {
     public float relativeWetness;
     [Range(1, 4)]
     public int numRivers;
-    
+    [Range(5, 10)]
+    public int numRegions;
 
+    public Vector2Int countyHexSize;
+    
 
     public Vector2Int GetMapSize() {
         //Gets a value between 1.2 - 1.6 (if mapsize enum is 0 - 4)

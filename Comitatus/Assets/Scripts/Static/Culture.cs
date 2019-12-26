@@ -14,12 +14,12 @@ public static class Culture {
     }
 
     public static Color[] color = new Color[] {
-        new Color(1,0,0),
-        new Color(0,1,0),
-        new Color(0,0,1),
-        new Color(1,1,0),
-        new Color(1,0,1),
-        new Color(0,1,1)
+        new Color(0,1,1),//Strovian
+        new Color(1,1,0),//Boskarish
+        new Color(0,0,1),//Kaltan
+        new Color(1,0,1),//Montisan
+        new Color(1,0,0),//Estish
+        new Color(0,1,0)//Afonic
     };
 
 

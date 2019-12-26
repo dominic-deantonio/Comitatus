@@ -11,4 +11,32 @@ public static class FlavorMap {
         return s;
     }
 
+    public static string GetGeneratedName() {
+        string letters = "aaaabcdeeeeefghiiiijklmnoooopqrstuuvwxyz";
+        string name = "";
+        int numWords = Random.Range(1, 3);
+
+        for (int i = 0; i < numWords; i++) {
+
+            if (i != 0) {
+                name += " ";
+            }
+
+            int wordLength = Random.Range(3, 10);
+            string word = "";
+
+            for (int x = 0; x < wordLength; x++) {
+                string letter = letters[Random.Range(0, letters.Length)].ToString();
+                if (x == 0) {
+                    word += letter.ToUpper();
+                } else {
+                    word += letter;
+                }
+            }
+
+            name += word;
+        }
+        return name;
+    }
+
 }

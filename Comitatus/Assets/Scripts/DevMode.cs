@@ -9,15 +9,18 @@ public class DevMode : MonoBehaviour {
     public static bool isActive = false;
     public GameObject devPanel;
     public Grid grid;
+    string dataToDisplay = "hex";
 
     public static bool nextMapmodeClick = true;
     public static TilemapRenderer previousMap;
 
-    TextMeshProUGUI hexInfoDisplay;
+    TextMeshProUGUI generalMapInfo;
+    TextMeshProUGUI selectDataDisplay;
     Ray hexRay;
 
     void Start() {
-        hexInfoDisplay = devPanel.transform.Find("DataDisplay").gameObject.GetComponent<TextMeshProUGUI>();
+        generalMapInfo = devPanel.transform.Find("MapData").gameObject.GetComponent<TextMeshProUGUI>();
+        selectDataDisplay = devPanel.transform.Find("SelectedData").gameObject.GetComponent<TextMeshProUGUI>();
     }
 
     void Update() {
@@ -28,7 +31,8 @@ public class DevMode : MonoBehaviour {
 
     public void DisplayInfo() {
         if (isActive) {
-            DisplayDevPanelInfo();
+            DisplayGeneralMapData();
+            DisplaySelectedData(dataToDisplay);
         }
     }
 
@@ -67,7 +71,7 @@ public class DevMode : MonoBehaviour {
     }
 
     void ClearHexInfoDisplay() {
-        hexInfoDisplay.text = "";
+        generalMapInfo.text = "";
     }
 
     void ClosePanel() {
@@ -79,18 +83,63 @@ public class DevMode : MonoBehaviour {
         devPanel.transform.position = new Vector3(0, 0, 0);
     }
 
-    void DisplayDevPanelInfo() {
-        string hexAndMapInfo = "No map info to display";
-        string tip = "\n\nF1 to generate new map, Tab to close dev mode";
+    void DisplayGeneralMapData() {
+        string mapData = "No map info to display";
+
+        if (MapData.didGenerateMap) {
+            mapData = DisplayMousePosition();
+            mapData += "\n\n-----Map Data-----\n" + MapData.DisplayMapInfo();
+        }
+
+        generalMapInfo.text = mapData;
+    }
+
+    string DisplayMousePosition() {
+        string output = "";
+
+        if (MapData.didGenerateMap) {
+
+            output = "Grid position: " + GetMouseHexPosition().x + ", " + GetMouseHexPosition().y;
+        }
+
+        return output;
+    }
+
+    Vector3Int GetMouseHexPosition() {
+        Vector3Int position = new Vector3Int();
 
         if (MapData.didGenerateMap) {
             hexRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 worldPoint = hexRay.GetPoint(-hexRay.origin.y / hexRay.direction.y);
-            Vector3Int position = grid.WorldToCell(worldPoint);
-            hexAndMapInfo = "-----Hex Data-----\nCoord: " + position.x + ", " + position.y + "\n" + MapData.GetHexInfo(position) +
-                            "\n\n-----Map Data-----\n" + MapData.DisplayMapInfo();
+            position = grid.WorldToCell(worldPoint);
         }
 
-        hexInfoDisplay.text = hexAndMapInfo + tip;
+        return new Vector3Int(position.x, 0, position.y);        
+    }
+
+    void DisplaySelectedData(string request) {
+        string s = "No map generated yet.";
+
+        if (MapData.didGenerateMap) {
+            if (request == "hex") {
+                s = "Hex information\n\n";
+                s += MapData.GetHexInfo(GetMouseHexPosition());
+            } else if (request == "county") {
+                s = "County information\n\n";
+                s += MapData.GetCountyInfo(GetMouseHexPosition());
+            } else if (request == "region") {
+                s = "Region information\n\n";
+                s += MapData.GetRegionInfo(GetMouseHexPosition());
+            } else {
+                s = "Bad parameter\n";
+            }
+        }
+
+        selectDataDisplay.text = s;
+
+    }
+
+    public void SelectDataToDisplay(string selection) {
+        dataToDisplay = selection;
     }
 }

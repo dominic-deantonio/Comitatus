@@ -10,14 +10,19 @@ public class MapGeneration : MonoBehaviour {
     public HexAssets assets;
     public GameObject hexContainer, natureContainer;
     public RTS_CamHelper camHelper;
-    public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap, cultureMap;
+    public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap, countyMap, regionMap;
 
     //Keep an eye out for dependencies here - make sure the order stays correct as methods evolve.
     public void GenerateMap() {
+        /*
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        */
         ClearMap();
         MapData.ClearData();
         MapData.GetPreferences();
         PositionGrid();
+
         //Data generation portion
         MapDataGeneration.GenerateBaseMap();
         MapDataGeneration.GenerateElevationData();
@@ -32,12 +37,12 @@ public class MapGeneration : MonoBehaviour {
         MapDataGeneration.GenerateCoastAndSeaData();
         MapDataGeneration.GenerateRiverData();
         MapData.AssignGlobalVariables();
-        CivDataGeneration.GenerateCultureRegionData();
+        DivisionDataGeneration.GenerateCounties();
 
         //Physical generation portion
         MapDataGeneration.GenerateRemainingTerrain();
         MapDataGeneration.AssignHexTerrain();
-        MapDataGeneration.AssignHexNature();        
+        MapDataGeneration.AssignHexNature();
         InstantiateHexes();
         InstantiateNature();
         CreateMapModes();
@@ -45,21 +50,34 @@ public class MapGeneration : MonoBehaviour {
         camHelper.SetInitialPosition();
         MapData.didGenerateMap = true;
         DebugData();
+        /*
+        stopwatch.Stop();
+        Debug.Log("Generation took " + stopwatch.Elapsed);
+        */
     }
 
     void DebugData() {
         /*
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        int regNum = 0;
+        int countNum = 0;
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.isAboveSeaLevel) {
-                Debug.Log((Culture.Name)hex.Value.culture);
-   
+
+                if (hex.Value.regionIndex == -1) {
+                    regNum++;
+                }
+                if (hex.Value.countyIndex == -1) {
+                    countNum++;
+                }
             }
-        }*/
+        }
+        Debug.Log("Unassigned to region: " + regNum + "\nUnassigned to county: " + countNum);
+        */
     }
 
     public void InstantiateHexes() {
         HexMaterials materials = GameObject.FindObjectOfType<HexMaterials>();
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.isAboveSeaLevel) {
                 Vector3 position = grid.GetCellCenterWorld(new Vector3Int(hex.Key.x, hex.Key.z, 0));
                 GameObject hexToSpawn = hex.Value.hexAsset;//The hex's assigned asset
@@ -71,7 +89,7 @@ public class MapGeneration : MonoBehaviour {
     }
 
     public void InstantiateNature() {
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.isAboveSeaLevel &&
                 (hex.Value.terrain == (int)Hex.TerrainType.Flat || hex.Value.terrain == (int)Hex.TerrainType.River || hex.Value.terrain == (int)Hex.TerrainType.Hill) &&
                  hex.Value.natureAsset != null) {
@@ -88,9 +106,11 @@ public class MapGeneration : MonoBehaviour {
         fertilityMap.ClearAllTiles();
         temperatureMap.ClearAllTiles();
         elevationMap.ClearAllTiles();
-        cultureMap.ClearAllTiles();
-        
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        countyMap.ClearAllTiles();
+        regionMap.ClearAllTiles();
+
+        //Create by hex
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.isAboveSeaLevel) {
                 Vector3Int position = new Vector3Int(hex.Key.x, hex.Key.z, 0);
                 //Do fertility first
@@ -113,15 +133,26 @@ public class MapGeneration : MonoBehaviour {
                 clr = new Color(hex.Value.elevation, hex.Value.elevation, 0);
                 tileToSet.color = clr;
                 elevationMap.SetTile(position, tileToSet);
-                //Do culture regions
-                if (hex.Value.culture != -1) {
-                    clr = Culture.color[hex.Value.culture];
-                    tileToSet.color = clr;
-                    cultureMap.SetTile(position, tileToSet);
+                //Do counties
+                if (hex.Value.countyIndex == -1) {                    
+                    tileToSet.color = new Color(0, 0, 0);
+                } else {
+                    tileToSet.color = MapData.counties[hex.Value.countyIndex].color;
                 }
+                countyMap.SetTile(position, tileToSet);
+                /*
+                */
+                //Do regions     
+                if (hex.Value.regionIndex == -1) {
+                    tileToSet.color = tileToSet.color = new Color(0, 0, 0);
+                } else {
+                    tileToSet.color = MapData.regions[hex.Value.regionIndex].color;
+                }
+                regionMap.SetTile(position, tileToSet);
+
             }
         }
-    }   
+    }
 
     public void PositionGrid() {
         Vector3 pos = new Vector3(-MapData.width / 2.33f, 0, -MapData.height / 4);

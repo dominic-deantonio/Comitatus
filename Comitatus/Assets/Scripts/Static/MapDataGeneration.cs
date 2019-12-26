@@ -11,9 +11,12 @@ public static class MapDataGeneration {
     public static void GenerateBaseMap() {
         for (int x = 0; x < MapData.width; x++) {
             for (int z = 0; z < MapData.height; z++) {
-                Hex hex = new Hex();
-                hex.rotationVector = Hex.possibleRotations[Random.Range(0, Hex.possibleRotations.Length)];
-                MapData.hexData.Add(new Vector3Int(x, 0, z), hex);
+                Vector3Int pos = new Vector3Int(x, 0, z);
+                Hex hex = new Hex {
+                    position = pos,
+                    rotationVector = Hex.possibleRotations[Random.Range(0, Hex.possibleRotations.Length)]
+                };
+                MapData.hexes.Add(pos, hex);
             }
         }
     }
@@ -61,7 +64,7 @@ public static class MapDataGeneration {
             for (int z = 0; z < MapData.height; z++) {
                 Vector3Int pos = new Vector3Int(x, 0, z);
                 float sample = Mathf.InverseLerp(lowestElevation, highestElevation, values[x, z]);
-                MapData.hexData[pos].elevation = sample;
+                MapData.hexes[pos].elevation = sample;
             }
         }
     }
@@ -79,19 +82,19 @@ public static class MapDataGeneration {
             //Smoothes the bottom, replaces entry in tilemap.elevation
             for (int z = 0; z < zDistFromEdge; z++) {
                 Vector3Int currentPos = new Vector3Int(x, 0, z);
-                float sample = MapData.hexData[currentPos].elevation;
+                float sample = MapData.hexes[currentPos].elevation;
                 float percent = z / zDistFromEdge;
                 sample *= percent;
-                MapData.hexData[currentPos].elevation = sample;
+                MapData.hexes[currentPos].elevation = sample;
             }
 
             //Smoothes the top, replaces entry in tilemap.elevation
             for (int z = MapData.height - 1; z > MapData.height - zDistFromEdge; z--) {
                 Vector3Int currentPos = new Vector3Int(x, 0, z);
-                float sample = MapData.hexData[currentPos].elevation;
+                float sample = MapData.hexes[currentPos].elevation;
                 float percent = (MapData.height - z) / zDistFromEdge;
                 sample *= percent;
-                MapData.hexData[currentPos].elevation = sample;
+                MapData.hexes[currentPos].elevation = sample;
             }
         }
 
@@ -100,19 +103,19 @@ public static class MapDataGeneration {
             //Smoothes left, replaces entry in tilemap.elevation
             for (int x = 0; x < xDistFromEdge; x++) {
                 Vector3Int currentPos = new Vector3Int(x, 0, z);
-                float sample = MapData.hexData[currentPos].elevation;
+                float sample = MapData.hexes[currentPos].elevation;
                 float percent = x / xDistFromEdge;
                 sample *= percent;
-                MapData.hexData[currentPos].elevation = sample;
+                MapData.hexes[currentPos].elevation = sample;
             }
 
             //Smoothes right, replaces entry in tilemap.elevation
             for (int x = MapData.width - 1; x > MapData.width - xDistFromEdge; x--) {
                 Vector3Int currentPos = new Vector3Int(x, 0, z);
-                float sample = MapData.hexData[currentPos].elevation;
+                float sample = MapData.hexes[currentPos].elevation;
                 float percent = (MapData.width - x) / xDistFromEdge;
                 sample *= percent;
-                MapData.hexData[currentPos].elevation = sample;
+                MapData.hexes[currentPos].elevation = sample;
             }
         }
     }
@@ -125,8 +128,8 @@ public static class MapDataGeneration {
             for (int z = 0; z < MapData.height; z++) {
                 Vector3Int currentPos = new Vector3Int(x, 0, z);
 
-                if (MapData.hexData[currentPos].elevation > MapData.seaLevel) {
-                    MapData.hexData[currentPos].isAboveSeaLevel = true;
+                if (MapData.hexes[currentPos].elevation > MapData.seaLevel) {
+                    MapData.hexes[currentPos].isAboveSeaLevel = true;
                 }
             }
         }
@@ -141,7 +144,7 @@ public static class MapDataGeneration {
         for (int x = 0; x < MapData.width; x++) {
             for (int z = 0; z < MapData.height; z++) {
                 Vector3Int currentPos = new Vector3Int(x, 0, z);
-                if (MapData.hexData[currentPos].isAboveSeaLevel) {
+                if (MapData.hexes[currentPos].isAboveSeaLevel) {
                     float scaleX = (float)x / MapData.width * pref.fertilityScale + seedHash;
                     float scaleY = (float)z / MapData.height * pref.fertilityScale + seedHash;
                     float currentFertility = Mathf.PerlinNoise(scaleX, scaleY);
@@ -163,10 +166,10 @@ public static class MapDataGeneration {
         for (int x = 0; x < MapData.width; x++) {
             for (int z = 0; z < MapData.height; z++) {
                 Vector3Int currentPos = new Vector3Int(x, 0, z);
-                if (MapData.hexData[currentPos].isAboveSeaLevel) {
+                if (MapData.hexes[currentPos].isAboveSeaLevel) {
                     Vector3Int pos = new Vector3Int(x, 0, z);
                     float sample = Mathf.InverseLerp(lowestFertility, highestFertility, values[x, z]);
-                    MapData.hexData[pos].fertility = sample;
+                    MapData.hexes[pos].fertility = sample;
                 }
             }
         }
@@ -181,7 +184,7 @@ public static class MapDataGeneration {
         for (int x = 0; x < MapData.width; x++) {
             for (int z = 0; z < MapData.height; z++) {
                 Vector3Int currentPos = new Vector3Int(x, 0, z);
-                if (MapData.hexData[currentPos].isAboveSeaLevel) {
+                if (MapData.hexes[currentPos].isAboveSeaLevel) {
                     float scaleX = (float)x / MapData.width * pref.rainfallScale + seedHash;
                     float scaleY = (float)z / MapData.height * pref.rainfallScale + seedHash;
                     float currentRainfall = Mathf.PerlinNoise(scaleX, scaleY);
@@ -203,10 +206,10 @@ public static class MapDataGeneration {
         for (int x = 0; x < MapData.width; x++) {
             for (int z = 0; z < MapData.height; z++) {
                 Vector3Int currentPos = new Vector3Int(x, 0, z);
-                if (MapData.hexData[currentPos].isAboveSeaLevel) {
+                if (MapData.hexes[currentPos].isAboveSeaLevel) {
                     Vector3Int pos = new Vector3Int(x, 0, z);
                     float sample = Mathf.InverseLerp(lowestRainfall, highestRainfall, values[x, z]);
-                    MapData.hexData[pos].rainfall = sample;
+                    MapData.hexes[pos].rainfall = sample;
                 }
             }
         }
@@ -245,10 +248,10 @@ public static class MapDataGeneration {
         for (int x = 0; x < MapData.width; x++) {
             for (int z = 0; z < MapData.height; z++) {
                 Vector3Int currentPos = new Vector3Int(x, 0, z);
-                if (MapData.hexData[currentPos].isAboveSeaLevel) {
+                if (MapData.hexes[currentPos].isAboveSeaLevel) {
                     Vector3Int pos = new Vector3Int(x, 0, z);
                     float sample = Mathf.InverseLerp(lowestTemp, highestTemp, values[x, z]);
-                    MapData.hexData[pos].temperature = sample;
+                    MapData.hexes[pos].temperature = sample;
                 }
             }
         }
@@ -266,7 +269,7 @@ public static class MapDataGeneration {
         float tempPercent = pref.relativeTemp;
         float wetnessPercent = pref.relativeWetness;
         //Add the dict values to list for sorting
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.isAboveSeaLevel) {
                 temps.Add(hex.Value.temperature);
                 wets.Add(hex.Value.rainfall);
@@ -294,7 +297,7 @@ public static class MapDataGeneration {
 
     public static void GenerateBiomeData() {
         MapPreferences pref = Object.FindObjectOfType<MapPreferences>();
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             float hexTemp = hex.Value.temperature;
             float hexWetness = hex.Value.rainfall;
             float hexFert = hex.Value.fertility;
@@ -390,19 +393,26 @@ public static class MapDataGeneration {
     }
 
     public static void GenerateNeighborData() {
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             hex.Value.neighbors = MapData.GetNeighbors(hex.Key);
+            foreach (Vector3Int neighbor in hex.Value.neighbors) {
+                if (neighbor.x >= 0 && neighbor.x < MapData.width && neighbor.z >= 0 && neighbor.z < MapData.height) {
+                    if (MapData.hexes[neighbor].isAboveSeaLevel) {
+                        hex.Value.landNeighbors.Add(neighbor);
+                    }
+                }
+            }
         }
     }
 
     public static void GenerateCoastAndSeaData() {
         MapData.coastHexes.Clear();
         MapData.seaHexes.Clear();
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.isAboveSeaLevel) {
                 foreach (Vector3Int neighbor in hex.Value.neighbors) {
                     if (neighbor.x > 0 && neighbor.x < MapData.width && neighbor.z > 0 && neighbor.z < MapData.height) {
-                        if (MapData.hexData[neighbor].isAboveSeaLevel == false) {
+                        if (MapData.hexes[neighbor].isAboveSeaLevel == false) {
                             hex.Value.isCoast = true;
                         }
                     }
@@ -414,7 +424,7 @@ public static class MapDataGeneration {
         }
 
         //This happens here because it is possible above that the same hex may be looked at multiple times for adjacency
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.isCoast) {
                 MapData.coastHexes.Add(hex.Key);
             }
@@ -467,7 +477,7 @@ public static class MapDataGeneration {
                 int minLength = 5; //If not this many, not a good path
                 List<Vector3Int> possiblePath = new List<Vector3Int>() { deltaCandidate }; //becomes the definite path if it meets reqs
                 Vector3Int nextPoint = deltaCandidate;
-                float nextPointElevation = MapData.hexData[deltaCandidate].elevation;
+                float nextPointElevation = MapData.hexes[deltaCandidate].elevation;
                 bool touchesNeighbor = false;
 
                 for (int i = 0; i < riverLength; i++) {
@@ -476,11 +486,11 @@ public static class MapDataGeneration {
 
                     //Get the highest elevation neighbor
                     foreach (Vector3Int pathCandidate in pathCandidates) {
-                        if (MapData.hexData[pathCandidate].elevation > nextPointElevation) {
-                            if (!MapData.hexData[pathCandidate].isCoast) {
+                        if (MapData.hexes[pathCandidate].elevation > nextPointElevation) {
+                            if (!MapData.hexes[pathCandidate].isCoast) {
                                 //Assigns the next highest point if it is not a coast hex.
                                 nextPoint = pathCandidate;
-                                nextPointElevation = MapData.hexData[pathCandidate].elevation;
+                                nextPointElevation = MapData.hexes[pathCandidate].elevation;
                             }
                         } else {
                             //There is no higher ground. Add the previous point as an origin
@@ -489,7 +499,7 @@ public static class MapDataGeneration {
                     }
 
                     //If next point is higher than prev entry, add it unless it is a river origin
-                    if (nextPointElevation > MapData.hexData[possiblePath[possiblePath.Count - 1]].elevation) {
+                    if (nextPointElevation > MapData.hexes[possiblePath[possiblePath.Count - 1]].elevation) {
                         if (riverOrigins.Contains(nextPoint)) {
                             break;
                             //possiblePath.RemoveAt(possiblePath.Count - 1);
@@ -527,7 +537,7 @@ public static class MapDataGeneration {
                 MapData.rivers.Add(deltaCandidate, path);
                 //Replace the terrain with river
                 foreach (Vector3Int point in path) {
-                    MapData.hexData[point].terrain = (int)Hex.TerrainType.River;
+                    MapData.hexes[point].terrain = (int)Hex.TerrainType.River;
                 }
                 riversMade++;
             } else {
@@ -550,7 +560,7 @@ public static class MapDataGeneration {
         //Rivers and coast are generated first, then non-flat terrain is added
         MapPreferences pref = Object.FindObjectOfType<MapPreferences>();
         MapData.GetMaxElevation();//Determines the highest elevation
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.terrain == (int)Hex.TerrainType.Flat &&
                 hex.Value.biome != (int)Hex.Biome.Bog &&
                 hex.Value.biome != (int)Hex.Biome.Swamp &&
@@ -568,7 +578,7 @@ public static class MapDataGeneration {
 
     public static void AssignHexTerrain() {
         HexAssets assets = GameObject.FindObjectOfType<HexAssets>();
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.isAboveSeaLevel) {
                 if (hex.Value.terrain == (int)Hex.TerrainType.Mountain) {
                     hex.Value.hexAsset = assets.mountainHex;
@@ -614,11 +624,11 @@ public static class MapDataGeneration {
         //if numriverneighbors < 2, this is either a delta or an origin 
         //Set the rotation of the river delta to the sea tile. Only works if there is only 1 sea tile.
         foreach (Vector3Int neighbor in h.neighbors) {
-            if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.Sea) {
+            if (MapData.hexes[neighbor].terrain == (int)Hex.TerrainType.Sea) {
 
                 deltaSeaNeighbor = System.Array.IndexOf(h.neighbors, neighbor);
 
-            } else if (MapData.hexData[neighbor].terrain == (int)Hex.TerrainType.River) {
+            } else if (MapData.hexes[neighbor].terrain == (int)Hex.TerrainType.River) {
 
                 if (firstRivNeighbor == -1) {
                     //Should run only for first river found
@@ -649,15 +659,15 @@ public static class MapDataGeneration {
         //Ensure this method always runs after the hex terrain is assigned
         GameObject[] natureBiome = new GameObject[] { };
         HexNature nature = GameObject.FindObjectOfType<HexNature>();
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexData) {
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.terrain == (int)Hex.TerrainType.Flat ||
                 hex.Value.terrain == (int)Hex.TerrainType.River ||
-                hex.Value.terrain == (int)Hex.TerrainType.Hill) { 
+                hex.Value.terrain == (int)Hex.TerrainType.Hill) {
                 //Temporary if statement. Allow different terrains as assets are created. Remove when all exist
 
                 natureBiome = nature.natureCollection[hex.Value.hexAsset]; //First select the correct terrain nature array based on the assigned hex type
                 hex.Value.natureAsset = natureBiome[hex.Value.biome]; //Then select the correct nature for the terrain type
-            } 
+            }
         }
     }
 }
