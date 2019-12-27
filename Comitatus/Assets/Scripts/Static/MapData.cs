@@ -7,10 +7,12 @@ using UnityEngine;
 //this should persist throughout the game
 public static class MapData {
 
-    public static int width, height, numLandHexes, numHexes;
+    public static int width, height, numHexes;
     public static string seed;
     public static Dictionary<Vector3Int, Hex> hexes = new Dictionary<Vector3Int, Hex>();
+    public static Dictionary<Vector3Int, Hex> landHexes = new Dictionary<Vector3Int, Hex>();
     public static List<County> counties = new List<County>();
+    public static List<Landmass> landmasses = new List<Landmass>();
     public static List<Region> regions = new List<Region>();
     public static Dictionary<Vector3Int, List<Vector3Int>> rivers = new Dictionary<Vector3Int, List<Vector3Int>>();
     public static HashSet<Vector3Int> coastHexes = new HashSet<Vector3Int>();
@@ -31,11 +33,13 @@ public static class MapData {
 
     public static void ClearData() {
         hexes.Clear();
+        landHexes.Clear();
         coastHexes.Clear();
         seaHexes.Clear();
         rivers.Clear();
         counties.Clear();
         regions.Clear();
+        landmasses.Clear();
         //Debug.Log("Cleared map data.");
     }
 
@@ -104,7 +108,10 @@ public static class MapData {
 
             s = "Map size: " + width + ", " + height +
                 "\nSeed: " + seed +
-                "\nNum tiles: " + (width * height - seaHexes.Count);
+                "\nNum landmasses: " + landmasses.Count +
+                "\nNum regions: " + regions.Count +
+                "\nNum counties: " + counties.Count +
+                "\nNum hexes: " + (width * height - seaHexes.Count);
         }
 
         return s;
@@ -122,13 +129,12 @@ public static class MapData {
     }
 
     public static void AssignGlobalVariables() {
-        numLandHexes = 0;
         numHexes = 0;
 
         foreach (KeyValuePair<Vector3Int, Hex> hex in hexes) {
             numHexes++;
             if (hex.Value.isAboveSeaLevel) {
-                numLandHexes++;
+                landHexes.Add(hex.Key, hex.Value);
             }
         }
     }
@@ -232,8 +238,14 @@ public static class MapData {
 
     }
 
-    public static Hex GetRandHex() {
-        Vector3Int randPos = new Vector3Int(Random.Range(0, MapData.width), 0, Random.Range(0, MapData.height));
+    public static Hex GetRandLandHex() {
+        Vector3Int randPos = new Vector3Int();
+
+        //Done this way because searching the hashset is much faster than the landHex dict
+        while (!seaHexes.Contains(randPos)) {
+            randPos = new Vector3Int(Random.Range(0, MapData.width), 0, Random.Range(0, MapData.height));
+        }
+
         Hex r = hexes[randPos];
         return r;
     }

@@ -556,7 +556,7 @@ public static class MapDataGeneration {
         //Debug.Log("Failed " + failures.Count + " of " + MapData.coastHashSet.Count + " river candidates.");
     }
 
-    public static void GenerateRemainingTerrain() {
+    public static void AssignRemainingAssets() {
         //Rivers and coast are generated first, then non-flat terrain is added
         MapPreferences pref = Object.FindObjectOfType<MapPreferences>();
         MapData.GetMaxElevation();//Determines the highest elevation

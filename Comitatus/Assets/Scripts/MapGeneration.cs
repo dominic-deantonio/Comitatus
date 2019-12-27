@@ -10,7 +10,7 @@ public class MapGeneration : MonoBehaviour {
     public HexAssets assets;
     public GameObject hexContainer, natureContainer;
     public RTS_CamHelper camHelper;
-    public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap, countyMap, regionMap;
+    public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap, countyMap, regionMap, landmassMap;
 
     //Keep an eye out for dependencies here - make sure the order stays correct as methods evolve.
     public void GenerateMap() {
@@ -36,13 +36,17 @@ public class MapGeneration : MonoBehaviour {
         MapDataGeneration.GenerateNeighborData();
         MapDataGeneration.GenerateCoastAndSeaData();
         MapDataGeneration.GenerateRiverData();
+
+        //Process the resulting data
         MapData.AssignGlobalVariables();
         DivisionDataGeneration.GenerateCounties();
 
-        //Physical generation portion
-        MapDataGeneration.GenerateRemainingTerrain();
+        //Assign assets
+        MapDataGeneration.AssignRemainingAssets();
         MapDataGeneration.AssignHexTerrain();
         MapDataGeneration.AssignHexNature();
+
+        //Physical generation portion
         InstantiateHexes();
         InstantiateNature();
         CreateMapModes();
@@ -108,6 +112,7 @@ public class MapGeneration : MonoBehaviour {
         elevationMap.ClearAllTiles();
         countyMap.ClearAllTiles();
         regionMap.ClearAllTiles();
+        landmassMap.ClearAllTiles();
 
         //Create by hex
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
@@ -144,12 +149,14 @@ public class MapGeneration : MonoBehaviour {
                 */
                 //Do regions     
                 if (hex.Value.regionIndex == -1) {
-                    tileToSet.color = tileToSet.color = new Color(0, 0, 0);
+                    tileToSet.color = new Color(0, 0, 0);
                 } else {
                     tileToSet.color = MapData.regions[hex.Value.regionIndex].color;
                 }
                 regionMap.SetTile(position, tileToSet);
-
+                //Do landmasses
+                tileToSet.color = MapData.landmasses[hex.Value.landmassIndex].color;
+                landmassMap.SetTile(position, tileToSet);
             }
         }
     }

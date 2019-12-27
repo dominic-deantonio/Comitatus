@@ -19,7 +19,7 @@ public class Hex {
     }
 
     public float fertility, elevation, rainfall, temperature;
-    public int biome, terrain, model, culture = -1, countyIndex= -1, regionIndex = -1;
+    public int biome, terrain, model, culture = -1, countyIndex= -1, regionIndex = -1, landmassIndex = -1;
     public bool isAboveSeaLevel, isCoast;
     public Vector3Int[] neighbors = new Vector3Int[6];
     public List<Vector3Int> landNeighbors = new List<Vector3Int>();
@@ -55,7 +55,8 @@ public class Hex {
             "\nLand neighbors: " + landNeighbors.Count +
             "\nCoastal: " + isCoast +
             "\nAbove sea level: " + isAboveSeaLevel +
-            "\nPosition xyz: " + position.x + ", " + position.y + ", " + position.z;
+            "\nPosition xyz: " + position.x + ", " + position.y + ", " + position.z +
+            "\nLandmass index: " + landmassIndex;
 
 
         return s;
