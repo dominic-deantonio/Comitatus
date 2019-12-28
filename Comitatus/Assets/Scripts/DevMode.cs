@@ -99,7 +99,7 @@ public class DevMode : MonoBehaviour {
 
         if (MapData.didGenerateMap) {
 
-            output = "Grid position: " + GetMouseHexPosition().x + ", " + GetMouseHexPosition().y;
+            output = "Grid position: " + GetMouseHexPosition().x + ", " + GetMouseHexPosition().z;
         }
 
         return output;
@@ -130,6 +130,9 @@ public class DevMode : MonoBehaviour {
             } else if (request == "region") {
                 s = "Region information\n\n";
                 s += MapData.GetRegionInfo(GetMouseHexPosition());
+            } else if (request == "landmass") {
+                s = "Landmass information\n\n";
+                s += MapData.GetLandmassInfo(GetMouseHexPosition());
             } else {
                 s = "Bad parameter\n";
             }

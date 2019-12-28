@@ -38,8 +38,8 @@ public class MapGeneration : MonoBehaviour {
         MapDataGeneration.GenerateRiverData();
 
         //Process the resulting data
-        MapData.AssignGlobalVariables();
-        DivisionDataGeneration.GenerateCounties();
+        MapData.CollectLandHexes();
+        DivisionDataGeneration.GenerateMapDivisions();
 
         //Assign assets
         MapDataGeneration.AssignRemainingAssets();

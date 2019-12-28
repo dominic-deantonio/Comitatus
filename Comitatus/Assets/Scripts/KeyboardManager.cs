@@ -41,21 +41,14 @@ public class KeyboardManager : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.F5)) {
                 dev.DisableMapmodes();
                 dev.ToggleMapmode(GameObject.Find("CountyMap").GetComponent<TilemapRenderer>());
-                dev.SelectDataToDisplay("county");
             }
             if (Input.GetKeyDown(KeyCode.F6)) {
                 dev.DisableMapmodes();
                 dev.ToggleMapmode(GameObject.Find("RegionMap").GetComponent<TilemapRenderer>());
-                dev.SelectDataToDisplay("region");
             }
-            if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                dev.SelectDataToDisplay("hex");
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2)) {
-                dev.SelectDataToDisplay("county");
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha3)) {
-                dev.SelectDataToDisplay("region");
+            if (Input.GetKeyDown(KeyCode.F7)) {
+                dev.DisableMapmodes();
+                dev.ToggleMapmode(GameObject.Find("LandmassMap").GetComponent<TilemapRenderer>());
             }
         }
     }

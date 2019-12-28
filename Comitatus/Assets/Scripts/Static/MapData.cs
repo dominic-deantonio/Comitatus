@@ -7,7 +7,7 @@ using UnityEngine;
 //this should persist throughout the game
 public static class MapData {
 
-    public static int width, height, numHexes;
+    public static int width, height;
     public static string seed;
     public static Dictionary<Vector3Int, Hex> hexes = new Dictionary<Vector3Int, Hex>();
     public static Dictionary<Vector3Int, Hex> landHexes = new Dictionary<Vector3Int, Hex>();
@@ -80,10 +80,8 @@ public static class MapData {
     public static string GetCountyInfo(Vector3Int pos) {
         string s = "Hover over land.";
 
-        if (hexes.ContainsKey(pos)) {
-            if (hexes[pos].isAboveSeaLevel) {
-                s = counties[hexes[pos].countyIndex].GetInfo();
-            }
+        if (landHexes.ContainsKey(pos)) {
+            s = counties[hexes[pos].countyIndex].GetInfo();
         }
 
         return s;
@@ -92,15 +90,22 @@ public static class MapData {
     public static string GetRegionInfo(Vector3Int pos) {
         string s = "Hover over land.";
 
-        if (hexes.ContainsKey(pos)) {
-            if (hexes[pos].isAboveSeaLevel) {
-                s = regions[hexes[pos].regionIndex].GetInfo();
-            }
+        if (landHexes.ContainsKey(pos)) {
+            s = regions[hexes[pos].regionIndex].GetInfo();
         }
 
         return s;
     }
 
+    public static string GetLandmassInfo(Vector3Int pos) {
+        string s = "Hover over land.";
+
+        if (landHexes.ContainsKey(pos)) {
+            s = landmasses[hexes[pos].landmassIndex].GetInfo();
+        }
+
+        return s;
+    }
     public static string DisplayMapInfo() {
         string s = "";
 
@@ -119,20 +124,14 @@ public static class MapData {
 
     public static void GetMaxElevation() {
         highestElevation = float.MinValue;
-        foreach (KeyValuePair<Vector3Int, Hex> hex in hexes) {
-            if (hex.Value.isAboveSeaLevel) {
-                if (hex.Value.elevation > highestElevation) {
-                    highestElevation = hex.Value.elevation;
-                }
-            }
+        foreach (KeyValuePair<Vector3Int, Hex> hex in landHexes) {
+            if (hex.Value.elevation > highestElevation)
+                highestElevation = hex.Value.elevation;
         }
     }
 
-    public static void AssignGlobalVariables() {
-        numHexes = 0;
-
+    public static void CollectLandHexes() {
         foreach (KeyValuePair<Vector3Int, Hex> hex in hexes) {
-            numHexes++;
             if (hex.Value.isAboveSeaLevel) {
                 landHexes.Add(hex.Key, hex.Value);
             }
