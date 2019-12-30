@@ -26,7 +26,7 @@ public class Region {
             foreach (int adj in adjacentRegions) {
                 s += " " + adj;
             }
-        }
+        }        
 
         s += "\nRegion color: " + color.ToString();
 

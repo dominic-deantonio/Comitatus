@@ -12,11 +12,6 @@ public static class DivisionDataGeneration {
         GenerateCountyData();
         IncorporateRemainingHexesToCounties();
         UpdateCollections();
-        /*
-        BalanceCounties();
-        UpdateCollections();
-        UpdateCollections();
-        */
         AssignAdjacencies();
     }
 
@@ -295,13 +290,22 @@ public static class DivisionDataGeneration {
         }
 
         for (int i = 0; i < numCounties; i++) {
-            MapData.counties.Add(new County(new List<Vector3Int>()));
+            County newCounty = new County(new List<Vector3Int>());
+            MapData.counties.Add(newCounty);
         }
 
         //First find out how many counties were made
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.landHexes) {
             MapData.regions[hex.Value.regionIndex].includedHexes.Add(hex.Key);
             MapData.counties[hex.Value.countyIndex].includedHexes.Add(hex.Key);
+
+            //Add the county index to the list
+            if (!MapData.regions[hex.Value.regionIndex].includedCounties.Contains(hex.Value.countyIndex)) {
+                MapData.regions[hex.Value.regionIndex].includedCounties.Add(hex.Value.countyIndex);                
+            }
+
+            MapData.counties[hex.Value.countyIndex].regionIndex = hex.Value.regionIndex;
+
         }
     }
 
@@ -430,175 +434,6 @@ public static class DivisionDataGeneration {
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.landHexes) {
             MapData.landmasses[hex.Value.landmassIndex].includedHexes.Add(hex.Key);
         }
-    }
-
-    //Some counties are huge. Need to split them up into smaller counties
-    static void BalanceCounties() {
-        List<County> tooBig = new List<County>();
-        MapPreferences pref = GameObject.FindObjectOfType<MapPreferences>();
-        int limit = pref.countyHexSize.y * 2; //Only really care if the county is more than 2x greater than the maximum
-
-        //Gather the too large counties
-        foreach (County county in MapData.counties) {
-            if (county.includedHexes.Count > limit)
-                tooBig.Add(county);
-        }
-
-        Debug.Log(tooBig.Count + " counties are too big.");
-
-        //Take some hexes from the counties which are too big and assign it this index
-        int newIndex = MapData.counties.Count - 1;
-        for (int i = 0; i < tooBig.Count; i++) {
-
-            int numNewCounties = tooBig[i].includedHexes.Count / pref.countyHexSize.y - 1; //create 1 fewer because whatever is left should equal about 1 county
-            //Debug.Log("County " + MapData.counties.IndexOf(tooBig[i]) + " with " + tooBig[i].includedHexes.Count + " hexes. Recommended new to make: " + numNewCounties);
-
-            //Create this many new counties
-            for (int x = 0; x < numNewCounties; x++) {
-                Vector3Int startPos = tooBig[i].includedHexes[Random.Range(0, tooBig[i].includedHexes.Count)];
-
-                //Pick a starting location along the coast and with enough room for at least a small county
-                //Also dont pick a starting hex next to a new county
-                int tries = 0;
-                Landmass landmass = MapData.landmasses[MapData.hexes[startPos].landmassIndex];
-                while (landmass.includedHexes.Count < pref.countyHexSize.x) {
-                    startPos = tooBig[i].includedHexes[Random.Range(0, tooBig[i].includedHexes.Count)];
-
-                    tries++;
-                    if (tries > 50) {
-                        Debug.Log("Failed to pick starting location for county balancing");
-                        break;
-                    }
-                }
-
-                //Quit because we couldn't find a good starting position
-                if (tries > 50) {
-                    Debug.Log("Skipping county " + MapData.counties.IndexOf(tooBig[i]));
-                    continue;
-                }
-
-                //If land neighbors exist, contiguity exists.
-                List<Vector3Int> contiguousToCheck = new List<Vector3Int>(MapData.landHexes[startPos].landNeighbors);
-
-                //Check each entry in the contiguousToCheck list
-                int attempts = 0;
-                List<Vector3Int> newCountyHexes = new List<Vector3Int>() { startPos };
-                while (newCountyHexes.Count < pref.countyHexSize.y) {
-
-                    //No more contiguous, stop processing
-                    if (contiguousToCheck.Count == 0) {
-                        Debug.Log("Ran out of contiguous hexes to check");
-                        break;
-                    }
-
-                    Vector3Int neighborToCheck = contiguousToCheck[Random.Range(0, contiguousToCheck.Count)]; //Get a neighbor from the list of contiguous
-                    newCountyHexes.Add(neighborToCheck);
-
-                    //Add neighbor to landmass
-                    foreach (Vector3Int neighbor in MapData.landHexes[neighborToCheck].landNeighbors) {
-                        if (MapData.landHexes[neighbor].countyIndex == MapData.landHexes[neighborToCheck].countyIndex && !newCountyHexes.Contains(neighbor)) {
-                            contiguousToCheck.Add(neighbor);
-                            newCountyHexes.Add(neighbor);
-                        }
-
-                        if (newCountyHexes.Count >= pref.countyHexSize.y) {
-                            break;
-                        }
-                    }
-
-                    //We checked the neighbors of this hex. Dont want to check it again or else infinite loop
-                    contiguousToCheck.Remove(neighborToCheck);
-                    //Debug.Log("contiguous: " + contiguousToCheck.Count);
-
-
-                    //Couldn't get to the preferred county size after n attempts. Is the new county big enough?
-                    attempts++;
-                    if (attempts > 300) {
-                        Debug.Log("Made too many attempts");
-                        if (newCountyHexes.Count > pref.countyHexSize.x * .8) {
-                            Debug.Log("New county is at least 80% of minimum required size: " + newCountyHexes.Count);
-                        } else {
-                            Debug.Log("New county was too small at " + newCountyHexes.Count);
-                        }
-                        break;
-                    }
-                }
-
-
-                //Debug.Log("Attempted to make county " + newIndex + ". " + newCountyHexes.Count + " hexes reassigned");
-
-                newIndex++;
-                foreach (Vector3Int newHex in newCountyHexes) {
-                    MapData.landHexes[newHex].countyIndex = newIndex;
-                }
-
-                //Increment the index for the next pass, any assignment should be done before increment
-
-                //Adding this here so the collection method can have easy access to the number of counties needed
-                MapData.counties.Add(new County(new List<Vector3Int>()));
-
-            }
-
-        }
-    }
+    }    
     
-    static List<int> GetLandmassOfCounty(County county) {
-        List<int> countyLandmasses = new List<int>();
-
-        foreach (Vector3Int hex in county.includedHexes) {
-            int index = MapData.hexes[hex].landmassIndex;
-            if (!countyLandmasses.Contains(index)) {
-                countyLandmasses.Add(index);
-            }
-        }
-
-        return countyLandmasses;
-
-    }
-
-    //This doesnt work
-    static void AbsorbSingleNoncontiguousToCounty() {
-        foreach (County county in MapData.counties) {
-
-            bool contiguous = true;
-            foreach (Vector3Int hexPos in county.includedHexes) {
-                List<int> neighborCounties = new List<int>();
-                Hex hex = MapData.landHexes[hexPos];
-
-                //If the hex does not have any neighbors of the same county index which border it, and it is not a little island, then it should be part of whatever county it DOES  border
-
-                if (hex.landNeighbors.Count > 0) {
-                    foreach (Vector3Int neighb in hex.landNeighbors) {
-                        Hex neighbor = MapData.landHexes[neighb];
-
-                        //Set this contiguous flag to true if any of the neighbors are same county index
-                        //This will only find single noncontiguous hexes
-                        if (neighbor.countyIndex == hex.countyIndex) {
-                            contiguous = true;
-                        } else {
-                            neighborCounties.Add(neighbor.countyIndex);
-                        }
-                    }
-
-
-                    if (!contiguous) {
-                        int neighborCounty = neighborCounties[Random.Range(0, neighborCounties.Count)];
-                        MapData.landHexes[hex.position].countyIndex = neighborCounty;
-                        Debug.Log("reassigned a hex");
-
-                    }
-
-
-
-                }
-
-
-
-
-            }
-
-
-        }
-    }
-
 }

@@ -12,12 +12,75 @@ public class MapGeneration : MonoBehaviour {
     public RTS_CamHelper camHelper;
     public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap, countyMap, regionMap, landmassMap;
 
-    //Keep an eye out for dependencies here - make sure the order stays correct as methods evolve.
-    public void GenerateMap() {
-        /*
+    IEnumerator GenMap() {
+        bool finished = false;
+
+        while (!finished) {
+            /*
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
         */
+            ClearMap();
+            MapData.ClearData();
+            MapData.GetPreferences();
+            PositionGrid();
+
+            //Data generation portion
+            MapDataGeneration.GenerateBaseMap();
+            MapDataGeneration.GenerateElevationData();
+            MapDataGeneration.SmoothElevationEdgesData();
+            MapDataGeneration.ProcessSeaLevel();
+            MapDataGeneration.GenerateFertilityData();
+            MapDataGeneration.GenerateRainfallData();
+            MapDataGeneration.GenerateTemperatureData();
+            MapDataGeneration.SetThresholds();
+            MapDataGeneration.GenerateBiomeData();
+            MapDataGeneration.GenerateNeighborData();
+            MapDataGeneration.GenerateCoastAndSeaData();
+            MapDataGeneration.GenerateRiverData();
+
+            //Process the resulting data
+            MapData.CollectLandHexes();
+            DivisionDataGeneration.GenerateMapDivisions();
+
+            //Assign assets
+            MapDataGeneration.AssignRemainingAssets();
+            MapDataGeneration.AssignHexTerrain();
+            MapDataGeneration.AssignHexNature();
+
+            //Physical generation portion
+            InstantiateHexes();
+            InstantiateNature();
+            CreateMapModes();
+            camHelper.CalculateBounds();
+            camHelper.SetInitialPosition();
+            MapData.didGenerateMap = true;
+            DebugData();
+            /*
+            stopwatch.Stop();
+            Debug.Log("Generation took " + stopwatch.Elapsed);
+            */
+
+            finished = true;
+
+        }
+
+        yield return null;
+
+
+    }
+
+
+
+
+    //Keep an eye out for dependencies here - make sure the order stays correct as methods evolve.
+    public void GenerateMap() {
+
+        StartCoroutine(GenMap());
+        /*
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        
         ClearMap();
         MapData.ClearData();
         MapData.GetPreferences();
@@ -139,7 +202,7 @@ public class MapGeneration : MonoBehaviour {
                 tileToSet.color = clr;
                 elevationMap.SetTile(position, tileToSet);
                 //Do counties
-                if (hex.Value.countyIndex == -1) {                    
+                if (hex.Value.countyIndex == -1) {
                     tileToSet.color = new Color(0, 0, 0);
                 } else {
                     tileToSet.color = MapData.counties[hex.Value.countyIndex].color;

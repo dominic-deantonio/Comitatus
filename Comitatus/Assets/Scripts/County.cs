@@ -28,6 +28,7 @@ public class County {
             }
         }
 
+        s += "\nRegion index: " + regionIndex;
         s += "\nCounty color: " + color.ToString();
 
         return s;
