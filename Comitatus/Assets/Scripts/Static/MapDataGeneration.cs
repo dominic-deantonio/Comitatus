@@ -4,6 +4,7 @@ using UnityEngine;
 
 //Generates data for the mapdata and tile classes.
 public static class MapDataGeneration {
+    public static System.Random random = new System.Random();
 
     /// <summary>
     /// Fills the MapData tile dictionary with empty tiles based on the mapsize.
@@ -14,7 +15,7 @@ public static class MapDataGeneration {
                 Vector3Int pos = new Vector3Int(x, 0, z);
                 Hex hex = new Hex {
                     position = pos,
-                    rotationVector = Hex.possibleRotations[Random.Range(0, Hex.possibleRotations.Length)]
+                    rotationVector = Hex.possibleRotations[random.Next(0, Hex.possibleRotations.Length)]
                 };
                 MapData.hexes.Add(pos, hex);
             }
@@ -430,7 +431,7 @@ public static class MapDataGeneration {
             }
         }
 
-    }
+    } 
 
     public static void GenerateRiverData() {
         //Deserts can have rivers http://digital-desert.com/water/rivers.html
@@ -439,7 +440,6 @@ public static class MapDataGeneration {
         int minRiverLength = 7;//should not be hardcoded
         int maxRiverLength = 25;//should not be hardcoded
         List<Vector3Int> failures = new List<Vector3Int>();
-        MapPreferences pref = Object.FindObjectOfType<MapPreferences>();
 
         //Get local reference to the coastal hashset
         List<Vector3Int> coastHexes = new List<Vector3Int>();
@@ -447,10 +447,10 @@ public static class MapDataGeneration {
             coastHexes.Add(coast);
         }
 
-        int riversNeeded = MapData.width / 10 * pref.numRivers;
+        int riversNeeded = MapData.width / 10 * MapData.numRivers;
 
         while (riversMade < riversNeeded) {
-            Vector3Int deltaCandidate = coastHexes[Random.Range(0, coastHexes.Count)];
+            Vector3Int deltaCandidate = coastHexes[random.Next(0, coastHexes.Count)];
             List<Vector3Int> path = new List<Vector3Int>();
             Vector3Int[] neighbors = MapData.GetNeighbors(deltaCandidate);
             List<Vector3Int> riverOrigins = new List<Vector3Int>(); //used to remove rivers where origins are the same
@@ -473,7 +473,7 @@ public static class MapDataGeneration {
 
             //If results are met, create a path
             if (notInList && badNeighbors <= 3) {
-                int riverLength = Random.Range(minRiverLength, maxRiverLength); //How long the river should be
+                int riverLength = random.Next(minRiverLength, maxRiverLength); //How long the river should be
                 int minLength = 5; //If not this many, not a good path
                 List<Vector3Int> possiblePath = new List<Vector3Int>() { deltaCandidate }; //becomes the definite path if it meets reqs
                 Vector3Int nextPoint = deltaCandidate;
@@ -556,6 +556,9 @@ public static class MapDataGeneration {
         //Debug.Log("Failed " + failures.Count + " of " + MapData.coastHashSet.Count + " river candidates.");
     }
 
+
+
+
     public static void AssignRemainingAssets() {
         //Rivers and coast are generated first, then non-flat terrain is added
         MapPreferences pref = Object.FindObjectOfType<MapPreferences>();
@@ -566,10 +569,10 @@ public static class MapDataGeneration {
                 hex.Value.biome != (int)Hex.Biome.Swamp &&
                 hex.Value.biome != (int)Hex.Biome.Marsh) {
                 if (hex.Value.elevation > MapData.highestElevation - pref.mountThreshold) {
-                    if (Random.Range(0, 10) < pref.mountainDensity)
+                    if (random.Next(0, 10) < pref.mountainDensity)
                         hex.Value.terrain = (int)Hex.TerrainType.Mountain;
                 } else if (hex.Value.elevation > MapData.highestElevation - pref.hillThreshold) {
-                    if (Random.Range(0, 10) < pref.hillDensity)
+                    if (random.Next(0, 10) < pref.hillDensity)
                         hex.Value.terrain = (int)Hex.TerrainType.Hill;
                 }
             }

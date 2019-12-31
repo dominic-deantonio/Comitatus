@@ -1815,6 +1815,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4131703426084491327, guid: 8fe308e40cacaba4da2b4e4abf0c7cf0,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4131703427278463799, guid: 8fe308e40cacaba4da2b4e4abf0c7cf0,
         type: 3}
       propertyPath: m_textInfo.characterCount

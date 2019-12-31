@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Tilemaps;
 
@@ -14,18 +15,22 @@ public class DevMode : MonoBehaviour {
     public static bool nextMapmodeClick = true;
     public static TilemapRenderer previousMap;
 
+    Button genNewMapButton;
     TextMeshProUGUI generalMapInfo;
     TextMeshProUGUI selectDataDisplay;
     Ray hexRay;
 
     void Start() {
+        genNewMapButton = GameObject.Find("GenNewMap").GetComponent<Button>();
         generalMapInfo = devPanel.transform.Find("MapData").gameObject.GetComponent<TextMeshProUGUI>();
         selectDataDisplay = devPanel.transform.Find("SelectedData").gameObject.GetComponent<TextMeshProUGUI>();
     }
 
     void Update() {
-
-        DisplayInfo();
+        if (isActive) {
+            DisplayInfo();
+            CheckGeneratingStatus(MapGeneration.currentlyGenerating);
+        }
 
     }
 
@@ -114,7 +119,7 @@ public class DevMode : MonoBehaviour {
             position = grid.WorldToCell(worldPoint);
         }
 
-        return new Vector3Int(position.x, 0, position.y);        
+        return new Vector3Int(position.x, 0, position.y);
     }
 
     void DisplaySelectedData(string request) {
@@ -144,5 +149,13 @@ public class DevMode : MonoBehaviour {
 
     public void SelectDataToDisplay(string selection) {
         dataToDisplay = selection;
+    }
+
+    void CheckGeneratingStatus(bool b) {
+        if (b) {
+            genNewMapButton.interactable = false;
+        } else {
+            genNewMapButton.interactable = true;
+        }
     }
 }

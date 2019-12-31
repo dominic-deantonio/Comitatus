@@ -13,7 +13,6 @@ public class County {
     //Constructor
     public County(List<Vector3Int> includedHexes) {
         this.includedHexes = includedHexes;
-        color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
     }
 
     public string GetInfo() {

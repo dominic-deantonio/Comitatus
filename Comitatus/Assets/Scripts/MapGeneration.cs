@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Threading.Tasks;
 
 public class MapGeneration : MonoBehaviour {
 
+    public static bool currentlyGenerating = false;
     public Grid grid;
     public Tile tileToSet;
     public HexAssets assets;
@@ -12,75 +14,16 @@ public class MapGeneration : MonoBehaviour {
     public RTS_CamHelper camHelper;
     public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap, countyMap, regionMap, landmassMap;
 
-    IEnumerator GenMap() {
-        bool finished = false;
-
-        while (!finished) {
-            /*
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
-        */
-            ClearMap();
-            MapData.ClearData();
-            MapData.GetPreferences();
-            PositionGrid();
-
-            //Data generation portion
-            MapDataGeneration.GenerateBaseMap();
-            MapDataGeneration.GenerateElevationData();
-            MapDataGeneration.SmoothElevationEdgesData();
-            MapDataGeneration.ProcessSeaLevel();
-            MapDataGeneration.GenerateFertilityData();
-            MapDataGeneration.GenerateRainfallData();
-            MapDataGeneration.GenerateTemperatureData();
-            MapDataGeneration.SetThresholds();
-            MapDataGeneration.GenerateBiomeData();
-            MapDataGeneration.GenerateNeighborData();
-            MapDataGeneration.GenerateCoastAndSeaData();
-            MapDataGeneration.GenerateRiverData();
-
-            //Process the resulting data
-            MapData.CollectLandHexes();
-            DivisionDataGeneration.GenerateMapDivisions();
-
-            //Assign assets
-            MapDataGeneration.AssignRemainingAssets();
-            MapDataGeneration.AssignHexTerrain();
-            MapDataGeneration.AssignHexNature();
-
-            //Physical generation portion
-            InstantiateHexes();
-            InstantiateNature();
-            CreateMapModes();
-            camHelper.CalculateBounds();
-            camHelper.SetInitialPosition();
-            MapData.didGenerateMap = true;
-            DebugData();
-            /*
-            stopwatch.Stop();
-            Debug.Log("Generation took " + stopwatch.Elapsed);
-            */
-
-            finished = true;
-
-        }
-
-        yield return null;
-
-
-    }
-
-
-
-
     //Keep an eye out for dependencies here - make sure the order stays correct as methods evolve.
     public void GenerateMap() {
+        Generate();
+    }
 
-        StartCoroutine(GenMap());
-        /*
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
-        
+    //Expensive functions are sent to the other thread to stop freezing.
+    async void Generate() {
+        MapData.didGenerateMap = false;
+        currentlyGenerating = true;
+
         ClearMap();
         MapData.ClearData();
         MapData.GetPreferences();
@@ -98,11 +41,23 @@ public class MapGeneration : MonoBehaviour {
         MapDataGeneration.GenerateBiomeData();
         MapDataGeneration.GenerateNeighborData();
         MapDataGeneration.GenerateCoastAndSeaData();
-        MapDataGeneration.GenerateRiverData();
+
+        await Task.Run(() => {
+            MapDataGeneration.GenerateRiverData();
+        });
+
+        MapData.CollectLandHexes();
 
         //Process the resulting data
-        MapData.CollectLandHexes();
-        DivisionDataGeneration.GenerateMapDivisions();
+        await Task.Run(() => {
+            DivisionDataGeneration.AssignContiguity();
+            DivisionDataGeneration.CollectContiguous();
+            DivisionDataGeneration.GenerateRegionData();
+            DivisionDataGeneration.IncorporateRemainingHexesToRegions();
+            DivisionDataGeneration.GenerateCountyData();
+            DivisionDataGeneration.IncorporateRemainingHexesToCounties();
+            DivisionDataGeneration.AssignAdjacencies();
+        });
 
         //Assign assets
         MapDataGeneration.AssignRemainingAssets();
@@ -110,39 +65,18 @@ public class MapGeneration : MonoBehaviour {
         MapDataGeneration.AssignHexNature();
 
         //Physical generation portion
+        ColorizeDivisions();
         InstantiateHexes();
         InstantiateNature();
         CreateMapModes();
         camHelper.CalculateBounds();
         camHelper.SetInitialPosition();
+
         MapData.didGenerateMap = true;
-        DebugData();
-        /*
-        stopwatch.Stop();
-        Debug.Log("Generation took " + stopwatch.Elapsed);
-        */
+        currentlyGenerating = false;
     }
 
-    void DebugData() {
-        /*
-        int regNum = 0;
-        int countNum = 0;
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
-            if (hex.Value.isAboveSeaLevel) {
-
-                if (hex.Value.regionIndex == -1) {
-                    regNum++;
-                }
-                if (hex.Value.countyIndex == -1) {
-                    countNum++;
-                }
-            }
-        }
-        Debug.Log("Unassigned to region: " + regNum + "\nUnassigned to county: " + countNum);
-        */
-    }
-
-    public void InstantiateHexes() {
+    void InstantiateHexes() {
         HexMaterials materials = GameObject.FindObjectOfType<HexMaterials>();
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.isAboveSeaLevel) {
@@ -155,7 +89,7 @@ public class MapGeneration : MonoBehaviour {
         }
     }
 
-    public void InstantiateNature() {
+    void InstantiateNature() {
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
             if (hex.Value.isAboveSeaLevel &&
                 (hex.Value.terrain == (int)Hex.TerrainType.Flat || hex.Value.terrain == (int)Hex.TerrainType.River || hex.Value.terrain == (int)Hex.TerrainType.Hill) &&
@@ -168,7 +102,7 @@ public class MapGeneration : MonoBehaviour {
         }
     }
 
-    public void CreateMapModes() {
+    void CreateMapModes() {
         rainfallMap.ClearAllTiles();
         fertilityMap.ClearAllTiles();
         temperatureMap.ClearAllTiles();
@@ -208,8 +142,7 @@ public class MapGeneration : MonoBehaviour {
                     tileToSet.color = MapData.counties[hex.Value.countyIndex].color;
                 }
                 countyMap.SetTile(position, tileToSet);
-                /*
-                */
+
                 //Do regions     
                 if (hex.Value.regionIndex == -1) {
                     tileToSet.color = new Color(0, 0, 0);
@@ -224,10 +157,31 @@ public class MapGeneration : MonoBehaviour {
         }
     }
 
-    public void PositionGrid() {
+    void PositionGrid() {
         Vector3 pos = new Vector3(-MapData.width / 2.33f, 0, -MapData.height / 4);
         grid.transform.position = pos;
+    }
 
+    //Call after they exist (divisiondatageneration)
+    void ColorizeDivisions() {
+        foreach (Landmass l in MapData.landmasses) {
+            float r = Random.Range(0f, 1f);
+            float g = Random.Range(0f, 1f);
+            float b = Random.Range(0f, 1f);
+            l.color = new Color(r, g, b);
+        }
+        foreach (Region reg in MapData.regions) {
+            float r = Random.Range(0f, 1f);
+            float g = Random.Range(0f, 1f);
+            float b = Random.Range(0f, 1f);
+            reg.color = new Color(r, g, b);
+        }
+        foreach (County c in MapData.counties) {
+            float r = Random.Range(0f, 1f);
+            float g = Random.Range(0f, 1f);
+            float b = Random.Range(0f, 1f);
+            c.color = new Color(r, g, b);
+        }
     }
 
     void ClearMap() {
@@ -236,6 +190,7 @@ public class MapGeneration : MonoBehaviour {
                 Destroy(child.gameObject);
             }
         }
+
         foreach (Transform child in natureContainer.GetComponentsInChildren<Transform>()) {
             if (child.transform != natureContainer.transform) {
                 Destroy(child.gameObject);

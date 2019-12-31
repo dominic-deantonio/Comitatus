@@ -7,6 +7,11 @@ using UnityEngine;
 //this should persist throughout the game
 public static class MapData {
 
+    //These vars aren't explicitly used in this class, but are read by the generation methods. Stored here to be thread safe
+    public static int numRivers, numRegions;
+    public static Vector2Int hexesPerCounty;
+
+    //Normal variables which may be used in this class. Need to go through and check
     public static int width, height;
     public static string seed;
     public static Dictionary<Vector3Int, Hex> hexes = new Dictionary<Vector3Int, Hex>();
@@ -28,6 +33,9 @@ public static class MapData {
         height = preferences.GetMapSize().y;
         seed = preferences.GetMapSeed();
         seaLevel = preferences.GetSeaLevel();
+        hexesPerCounty = preferences.countyHexSize;
+        numRegions = preferences.numRegions;
+        numRivers = preferences.numRivers;
         //Debug.Log(preferences.GetMapSize());
     }
 
@@ -262,6 +270,10 @@ public static class MapData {
         }
 
         return b;
+    }
+
+    public static int GetNumRegions() {
+        return regions.Count;
     }
 }
 

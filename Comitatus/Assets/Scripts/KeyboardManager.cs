@@ -17,11 +17,14 @@ public class KeyboardManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Tab)) {
             dev.ToggleDevMode();
         }
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            mapGen.GenerateMap();
+
+        if (!MapGeneration.currentlyGenerating) {
+            if (Input.GetKeyDown(KeyCode.Return)) {
+                mapGen.GenerateMap();
+            }
         }
 
-        if (DevMode.isActive) {            
+        if (DevMode.isActive) {
             if (Input.GetKeyDown(KeyCode.F1)) {
                 dev.DisableMapmodes();
                 dev.ToggleMapmode(GameObject.Find("FertilityMap").GetComponent<TilemapRenderer>());

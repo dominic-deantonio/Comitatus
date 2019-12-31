@@ -12,7 +12,6 @@ public class Region {
 
     //Constructor
     public Region() {
-        color = new Color(Random.Range(.1f, .9f), Random.Range(.1f, .9f), Random.Range(.1f, .9f));
     }
 
     public string GetInfo() {
@@ -26,7 +25,7 @@ public class Region {
             foreach (int adj in adjacentRegions) {
                 s += " " + adj;
             }
-        }        
+        }
 
         s += "\nRegion color: " + color.ToString();
 

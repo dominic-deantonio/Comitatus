@@ -4,23 +4,14 @@ using UnityEngine;
 //This is a utility class to generate the regions and counties
 public static class DivisionDataGeneration {
 
-    public static void GenerateMapDivisions() {
-        AssignContiguity();
-        CollectContiguous();
-        GenerateRegionData();
-        IncorporateRemainingHexesToRegions();
-        GenerateCountyData();
-        IncorporateRemainingHexesToCounties();
-        UpdateCollections();
-        AssignAdjacencies();
-    }
+    public static System.Random random = new System.Random();
 
     //Creates initial region locations and fills neighbors
     //There will be unallocated hexes remaining, esp for island areas
-    static void GenerateRegionData() {
+    public static void GenerateRegionData() {
 
         List<Hex> hexList = new List<Hex>();
-        int numRegionsNeeded = GameObject.FindObjectOfType<MapPreferences>().numRegions;
+        int numRegionsNeeded = MapData.numRegions;
         List<List<Hex>> regions = new List<List<Hex>>();
 
         //Add empty list of hexes to the list
@@ -41,7 +32,7 @@ public static class DivisionDataGeneration {
             int attemptStart = 0;
             while (true) {
 
-                Hex randHex = hexList[Random.Range(0, hexList.Count)];
+                Hex randHex = hexList[random.Next(0, hexList.Count)];
                 bool badStart = false;
 
                 //Tests to pass: not coastal, not already assigned, no nearby starter
@@ -86,7 +77,7 @@ public static class DivisionDataGeneration {
 
             //Add neighbor to region
             foreach (List<Hex> region in regions) {
-                Hex starterHex = region[Random.Range(0, region.Count)];
+                Hex starterHex = region[random.Next(0, region.Count)];
                 foreach (Vector3Int neighbor in starterHex.landNeighbors) {
                     if (MapData.hexes[neighbor].regionIndex == -1) {
                         region.Add(MapData.hexes[neighbor]);
@@ -103,7 +94,7 @@ public static class DivisionDataGeneration {
                 }
             }
             if (complete) {
-                Debug.Log("Each region has required number of hexes");
+                //Debug.Log("Each region has required number of hexes");
                 break;
             }
 
@@ -125,7 +116,7 @@ public static class DivisionDataGeneration {
     }
 
     //Incorporates the islands and non neighbors into the regions
-    static void IncorporateRemainingHexesToRegions() {
+    public static void IncorporateRemainingHexesToRegions() {
         List<Vector3Int> unincorporated = new List<Vector3Int>();
         int attempts = 0;
         while (true) {
@@ -167,8 +158,8 @@ public static class DivisionDataGeneration {
     }
 
     //Divides the regions into counties (size defined in mappreferences)
-    static void GenerateCountyData() {
-        Vector2Int sizePrefs = GameObject.FindObjectOfType<MapPreferences>().countyHexSize;
+    public static void GenerateCountyData() {
+        Vector2Int sizePrefs = MapData.hexesPerCounty;
 
         //Get unincorporated hexes
         foreach (Region region in MapData.regions) {
@@ -182,15 +173,15 @@ public static class DivisionDataGeneration {
 
             //Create counties until there are no untested starting positions
             while (untestedStarts.Count > 0) {
-                int hexesPerCounty = Random.Range(sizePrefs.x, sizePrefs.y);
+                int hexesPerCounty = random.Next(sizePrefs.x, sizePrefs.y);
                 bool adequateCounty = false;
-                Vector3Int firstHex = untestedStarts[Random.Range(0, untestedStarts.Count)];//Choose a random starting spot from the unincorporated hexes
+                Vector3Int firstHex = untestedStarts[random.Next(0, untestedStarts.Count)];//Choose a random starting spot from the unincorporated hexes
 
                 List<Vector3Int> countyHexes = new List<Vector3Int> { firstHex };
 
                 int attempts = 0;
                 while (countyHexes.Count < hexesPerCounty) {
-                    Vector3Int startingHex = countyHexes[Random.Range(0, countyHexes.Count)];
+                    Vector3Int startingHex = countyHexes[random.Next(0, countyHexes.Count)];
                     //Choose rand start pos (first iteration only 1 option, but expands as more added) - makes county organic
 
                     foreach (Vector3Int neighbor in MapData.GetNeighbors(startingHex)) {
@@ -226,7 +217,7 @@ public static class DivisionDataGeneration {
     }
 
     //Incorporate islands and non neighbors into counties. May result in huge counties
-    static void IncorporateRemainingHexesToCounties() {
+    public static void IncorporateRemainingHexesToCounties() {
 
         List<Vector3Int> unincorporated = new List<Vector3Int>();
         int attempts = 0;
@@ -276,7 +267,7 @@ public static class DivisionDataGeneration {
     }
 
     //Create the data collection based on the actual hexes
-    static void UpdateCollections() {
+    public static void UpdateCollections() {
 
         int numRegions = MapData.regions.Count;
         int numCounties = MapData.counties.Count;
@@ -301,7 +292,7 @@ public static class DivisionDataGeneration {
 
             //Add the county index to the list
             if (!MapData.regions[hex.Value.regionIndex].includedCounties.Contains(hex.Value.countyIndex)) {
-                MapData.regions[hex.Value.regionIndex].includedCounties.Add(hex.Value.countyIndex);                
+                MapData.regions[hex.Value.regionIndex].includedCounties.Add(hex.Value.countyIndex);
             }
 
             MapData.counties[hex.Value.countyIndex].regionIndex = hex.Value.regionIndex;
@@ -309,7 +300,7 @@ public static class DivisionDataGeneration {
         }
     }
 
-    static void AssignAdjacencies() {
+    public static void AssignAdjacencies() {
         HashSet<Vector3Int> hexes = new HashSet<Vector3Int>();
 
         //Gather the hexes into a hashset of the above sea level hexes
@@ -370,7 +361,7 @@ public static class DivisionDataGeneration {
     }
 
     //Separates the map into landmasses
-    static void AssignContiguity() {
+    public static void AssignContiguity() {
         List<Vector3Int> unassigned = new List<Vector3Int>();
 
         //Each loop essentially creates a newly defined landmass and adds provinces to it
@@ -388,8 +379,8 @@ public static class DivisionDataGeneration {
                 break;
             }
 
-            //Get a random unassigned and check its neighbors. Assign the index here rather than later.
-            Vector3Int startPos = unassigned[Random.Range(0, unassigned.Count)];
+            //Get a random unassigned and check its neighbors. Assign the index here rather than later.            
+            Vector3Int startPos = unassigned[random.Next(0, unassigned.Count)];
             MapData.hexes[startPos].landmassIndex = landmassIndex;
             Landmass landmass = new Landmass();
             MapData.landmasses.Add(landmass); //Fill the list of landmasses up at the same time to make collection easier.
@@ -400,7 +391,7 @@ public static class DivisionDataGeneration {
 
             //Check each entry in the contiguousToCheck list
             while (contiguousToCheck.Count > 0) {
-                Vector3Int neighborToCheck = contiguousToCheck[Random.Range(0, contiguousToCheck.Count)];
+                Vector3Int neighborToCheck = contiguousToCheck[random.Next(0, contiguousToCheck.Count)];
 
                 //Add neighbor to landmass
                 foreach (Vector3Int neighbor in MapData.hexes[neighborToCheck].landNeighbors) {
@@ -430,10 +421,10 @@ public static class DivisionDataGeneration {
     }
 
     //Adds contiguous land to the mapdata collection
-    static void CollectContiguous() {
+    public static void CollectContiguous() {
         foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.landHexes) {
             MapData.landmasses[hex.Value.landmassIndex].includedHexes.Add(hex.Key);
         }
-    }    
-    
+    }
+
 }

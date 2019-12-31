@@ -43,7 +43,7 @@ public class MapPreferences : MonoBehaviour {
     [Range(1, 4)]
     public int numRivers;
     [Range(5, 10)]
-    public int numRegions;
+    public  int numRegions;
 
     public Vector2Int countyHexSize;
     
@@ -78,12 +78,4 @@ public class MapPreferences : MonoBehaviour {
     public float GetSeaLevel() {
         return seaLevel;
     }
-
-
-
-
-
-
-
-
 }
