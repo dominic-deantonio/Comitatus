@@ -13,6 +13,11 @@ public class MapGeneration : MonoBehaviour {
     public GameObject hexContainer, natureContainer;
     public RTS_CamHelper camHelper;
     public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap, countyMap, regionMap, landmassMap;
+    UI ui;
+
+    private void Start() {
+        ui = GameObject.Find("UIManager").GetComponent<UI>();
+    }
 
     //Keep an eye out for dependencies here - make sure the order stays correct as methods evolve.
     public void GenerateMap() {
@@ -23,8 +28,8 @@ public class MapGeneration : MonoBehaviour {
     async void Generate() {
         MapData.didGenerateMap = false;
         currentlyGenerating = true;
+        ui.LoadIcon(true);
 
-        ClearMap();
         MapData.ClearData();
         MapData.GetPreferences();
         PositionGrid();
@@ -65,7 +70,8 @@ public class MapGeneration : MonoBehaviour {
         MapDataGeneration.AssignHexNature();
 
         //Physical generation portion
-        ColorizeDivisions();
+        ClearMap();
+        FlavorizeDivisions();
         InstantiateHexes();
         InstantiateNature();
         CreateMapModes();
@@ -74,6 +80,7 @@ public class MapGeneration : MonoBehaviour {
 
         MapData.didGenerateMap = true;
         currentlyGenerating = false;
+        ui.LoadIcon(false);
     }
 
     void InstantiateHexes() {
@@ -163,24 +170,27 @@ public class MapGeneration : MonoBehaviour {
     }
 
     //Call after they exist (divisiondatageneration)
-    void ColorizeDivisions() {
+    void FlavorizeDivisions() {
         foreach (Landmass l in MapData.landmasses) {
             float r = Random.Range(0f, 1f);
             float g = Random.Range(0f, 1f);
             float b = Random.Range(0f, 1f);
             l.color = new Color(r, g, b);
+            l.name = FlavorMap.GetGeneratedName();
         }
         foreach (Region reg in MapData.regions) {
             float r = Random.Range(0f, 1f);
             float g = Random.Range(0f, 1f);
             float b = Random.Range(0f, 1f);
             reg.color = new Color(r, g, b);
+            reg.name = FlavorMap.GetGeneratedName();
         }
         foreach (County c in MapData.counties) {
             float r = Random.Range(0f, 1f);
             float g = Random.Range(0f, 1f);
             float b = Random.Range(0f, 1f);
             c.color = new Color(r, g, b);
+            c.name = FlavorMap.GetGeneratedName();
         }
     }
 

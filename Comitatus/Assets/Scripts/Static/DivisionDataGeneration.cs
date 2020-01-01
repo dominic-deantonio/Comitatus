@@ -295,7 +295,6 @@ public static class DivisionDataGeneration {
                 MapData.regions[hex.Value.regionIndex].includedCounties.Add(hex.Value.countyIndex);
             }
 
-            MapData.counties[hex.Value.countyIndex].regionIndex = hex.Value.regionIndex;
 
         }
     }

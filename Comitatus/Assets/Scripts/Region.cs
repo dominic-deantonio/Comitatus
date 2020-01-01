@@ -15,7 +15,7 @@ public class Region {
     }
 
     public string GetInfo() {
-        string s = "Region: " + MapData.regions.IndexOf(this);
+        string s = "Region: " + name + " (" + MapData.regions.IndexOf(this) + ")";
         s += "\nHexes in region: " + includedHexes.Count;
         s += "\nCounties in region: " + includedCounties.Count;
 

@@ -7,7 +7,6 @@ public class County {
     public string name = "Countyname";
     public List<Vector3Int> includedHexes = new List<Vector3Int>();
     public List<int> adjacentCounties = new List<int>();
-    public int regionIndex = -1;
     public Color color;
 
     //Constructor
@@ -16,8 +15,8 @@ public class County {
     }
 
     public string GetInfo() {
-        string s = "County: " + MapData.counties.IndexOf(this);
-        s += "\nHexes in county: " + includedHexes.Count;        
+        string s = "County: " + name + " (" + MapData.counties.IndexOf(this) + ")";
+        s += "\nHexes in county: " + includedHexes.Count;
 
         s += "\n" + adjacentCounties.Count + " counties adjacent:";
         if (adjacentCounties.Count > 0) {
@@ -27,7 +26,6 @@ public class County {
             }
         }
 
-        s += "\nRegion index: " + regionIndex;
         s += "\nCounty color: " + color.ToString();
 
         return s;
