@@ -8,6 +8,7 @@ public class County {
     public List<Vector3Int> includedHexes = new List<Vector3Int>();
     public List<int> adjacentCounties = new List<int>();
     public Color color;
+    public Dictionary<int, List<Vector3Int>> biomeData = new Dictionary<int, List<Vector3Int>>();
 
     //Constructor
     public County(List<Vector3Int> includedHexes) {

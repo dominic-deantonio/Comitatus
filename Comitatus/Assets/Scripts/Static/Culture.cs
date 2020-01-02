@@ -5,12 +5,16 @@ using UnityEngine;
 public static class Culture {
 
     public enum Name {
-        Strovian, Boskarish, Kaltan, Montisan, Estish, Afonic
+        Strovian, Boskari, Kaltan, Montisan, Estish, Afonic
     }
 
     //The people who live there-this might not end up being used.
     public enum Demonym {
-        Strovians, Boskars, Kaltans, Montisans, Estish, Afons
+        Strovians, Boskari, Kaltans, Montisans, Estish, Afons
+    }
+
+    public enum Place {
+        Strovia, Boskara, Kalteland, Montisa, Estulnad, Afon
     }
 
     public static Color[] color = new Color[] {

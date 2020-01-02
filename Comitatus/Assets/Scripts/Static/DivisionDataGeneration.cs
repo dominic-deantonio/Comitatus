@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 //This is a utility class to generate the regions and counties
@@ -20,10 +21,8 @@ public static class DivisionDataGeneration {
         }
 
         //Collect a local set of available hexes to add to the region
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
-            if (hex.Value.isAboveSeaLevel) {
-                hexList.Add(hex.Value);
-            }
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.landHexes) {
+            hexList.Add(hex.Value);
         }
 
     //Add starting location to the region
@@ -426,4 +425,36 @@ public static class DivisionDataGeneration {
         }
     }
 
+    //Add data to the regions for analysis later.
+    public static void CollectData() {
+        //For each hex in the division, loop through and collect relevant information
+
+        var biomes = Enum.GetValues(typeof(Hex.Biome));
+
+        foreach (Hex.Biome biome in biomes) {
+            foreach (Region reg in MapData.regions) {
+                reg.biomeData.Add((int)biome, new List<Vector3Int>());
+            }
+            foreach (County county in MapData.counties) {
+                county.biomeData.Add((int)biome, new List<Vector3Int>());
+            }
+        }
+
+        foreach (Region region in MapData.regions) {
+            foreach (Vector3Int hex in region.includedHexes) {
+
+                int biome = MapData.landHexes[hex].biome;
+                region.biomeData[biome].Add(hex);
+            }
+        }
+
+        foreach (County county in MapData.counties) {
+            foreach (Vector3Int hex in county.includedHexes) {
+
+                int biome = MapData.landHexes[hex].biome;
+                county.biomeData[biome].Add(hex);
+
+            }
+        }
+    }
 }

@@ -896,7 +896,7 @@ MonoBehaviour:
   mapSize: 2
   seed: something
   randomizeSeed: 1
-  setCamPosition: 0
+  setCamPosition: 1
   terrainScale: 8
   hillThreshold: 0.448
   mountThreshold: 0.191
@@ -911,7 +911,7 @@ MonoBehaviour:
   percentBadLand: 0.3
   relativeWetness: 0.35
   numRivers: 4
-  numRegions: 7
+  numRegions: 8
   countyHexSize: {x: 25, y: 35}
 --- !u!114 &738055925
 MonoBehaviour:
@@ -969,6 +969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   devPanel: {fileID: 386310910}
   grid: {fileID: 1325828333}
+  autogenButtonLabel: {fileID: 0}
 --- !u!4 &839621378
 Transform:
   m_ObjectHideFlags: 0
@@ -2946,5 +2947,70 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
       objectReference: {fileID: 839621377}
+    - target: {fileID: 6526922194987444262, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922194987444262, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922194987444262, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922194987444262, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922194987444262, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922194987444261, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 738055925}
+    - target: {fileID: 6526922194987444261, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleAutogenerator
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922195944561453, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922195944561453, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922195944561453, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922195944561453, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922195944561453, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6526922195944561453, guid: c8075038d03da2747b50b0a630d76c30,
+        type: 3}
+      propertyPath: m_text
+      value: Start Autogen
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8075038d03da2747b50b0a630d76c30, type: 3}

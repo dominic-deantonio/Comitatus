@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 public class MapGeneration : MonoBehaviour {
 
     public static bool currentlyGenerating = false;
+    
+    
     public Grid grid;
     public Tile tileToSet;
     public HexAssets assets;
@@ -17,6 +19,26 @@ public class MapGeneration : MonoBehaviour {
 
     private void Start() {
         ui = GameObject.Find("UIManager").GetComponent<UI>();
+    }
+
+    public void ToggleAutogenerator() {       
+        if (DevMode.shouldAutogen) {
+            DevMode.shouldAutogen = false;
+
+            GameObject.Find("DevModeManager").GetComponent<DevMode>().autogenButtonLabel.text = "Start Autogen";
+            StopCoroutine(Autogenerate());
+        } else {
+            DevMode.shouldAutogen = true;
+            GameObject.Find("DevModeManager").GetComponent<DevMode>().autogenButtonLabel.text = "Stop Autogen";
+            StartCoroutine(Autogenerate());
+        }
+    }
+
+    IEnumerator Autogenerate(float t = 6f) {
+        while (DevMode.shouldAutogen) {
+            GenerateMap();            
+            yield return new WaitForSeconds(t);
+        }
     }
 
     //Keep an eye out for dependencies here - make sure the order stays correct as methods evolve.
@@ -62,6 +84,8 @@ public class MapGeneration : MonoBehaviour {
             DivisionDataGeneration.GenerateCountyData();
             DivisionDataGeneration.IncorporateRemainingHexesToCounties();
             DivisionDataGeneration.AssignAdjacencies();
+            DivisionDataGeneration.CollectData();
+            FactionDataGeneration.AssignDivisionalCulture();
         });
 
         //Assign assets
@@ -85,14 +109,13 @@ public class MapGeneration : MonoBehaviour {
 
     void InstantiateHexes() {
         HexMaterials materials = GameObject.FindObjectOfType<HexMaterials>();
-        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.hexes) {
-            if (hex.Value.isAboveSeaLevel) {
-                Vector3 position = grid.GetCellCenterWorld(new Vector3Int(hex.Key.x, hex.Key.z, 0));
-                GameObject hexToSpawn = hex.Value.hexAsset;//The hex's assigned asset
-                Quaternion rotation = Quaternion.Euler(hex.Value.rotationVector);//The hex's assigned rotation vector3
-                GameObject gen = Instantiate(hexToSpawn, position, rotation, hexContainer.transform);
-                gen.GetComponent<Renderer>().material = materials.hexMaterials[hex.Value.biome];
-            }
+        foreach (KeyValuePair<Vector3Int, Hex> hex in MapData.landHexes) {
+
+            Vector3 position = grid.GetCellCenterWorld(new Vector3Int(hex.Key.x, hex.Key.z, 0));
+            GameObject hexToSpawn = hex.Value.hexAsset;//The hex's assigned asset
+            Quaternion rotation = Quaternion.Euler(hex.Value.rotationVector);//The hex's assigned rotation vector3
+            GameObject gen = Instantiate(hexToSpawn, position, rotation, hexContainer.transform);
+            gen.GetComponent<Renderer>().material = materials.hexMaterials[hex.Value.biome];
         }
     }
 

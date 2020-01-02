@@ -12,16 +12,19 @@ public class DevMode : MonoBehaviour {
     public Grid grid;
     string dataToDisplay = "hex";
 
+    public static bool shouldAutogen = false;
     public static bool nextMapmodeClick = true;
     public static TilemapRenderer previousMap;
 
     Button genNewMapButton;
+    public TextMeshProUGUI autogenButtonLabel; //Needs to be public for mapgeneration updates
     TextMeshProUGUI generalMapInfo;
     TextMeshProUGUI selectDataDisplay;
     Ray hexRay;
 
     void Start() {
         genNewMapButton = GameObject.Find("GenNewMap").GetComponent<Button>();
+        autogenButtonLabel = GameObject.Find("Autogen").GetComponentInChildren<TextMeshProUGUI>();
         generalMapInfo = devPanel.transform.Find("MapData").gameObject.GetComponent<TextMeshProUGUI>();
         selectDataDisplay = devPanel.transform.Find("SelectedData").gameObject.GetComponent<TextMeshProUGUI>();
     }
@@ -31,7 +34,6 @@ public class DevMode : MonoBehaviour {
             DisplayInfo();
             CheckGeneratingStatus(MapGeneration.currentlyGenerating);
         }
-
     }
 
     public void DisplayInfo() {
