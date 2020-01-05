@@ -15,7 +15,6 @@ public class Region {
     //Culture assignment vars
     public float taigaPercent, desertPercent, tundraPercent, grassPercent, forestPercent, marshPercent;
 
-
     public string GetInfo() {
         string s = "Region: " + name + " (" + MapData.regions.IndexOf(this) + ")";
         s += "\nHexes in region: " + includedHexes.Count;

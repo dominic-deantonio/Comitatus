@@ -35,7 +35,7 @@ public static class DivisionDataGeneration {
                 bool badStart = false;
 
                 //Tests to pass: not coastal, not already assigned, no nearby starter
-                if (randHex.regionIndex == -1 && randHex.landNeighbors.Count > 5) {
+                if (randHex.regionIndex == -1 && randHex.landNeighbors.Count > 5 && MapData.landmasses[randHex.landmassIndex].includedHexes.Count > 150) {
                     foreach (Vector3Int nearby in MapData.GetHexesInRadius(20, randHex.position)) {
                         if (MapData.WithinMapBounds(nearby)) {
                             if (MapData.hexes[nearby].regionIndex != -1) {
@@ -54,16 +54,17 @@ public static class DivisionDataGeneration {
 
                 attemptStart++;
                 if (attemptStart > 50) {
-                    /*
+
                     Debug.Log("Couldn't find starting position for region " + regions.IndexOf(region));
                     Debug.Log("Restarting region starting assignment");
-                    */
+
                     foreach (List<Hex> reg in regions) {
                         reg.Clear();
                     }
                     foreach (Hex h in hexList) {
                         h.regionIndex = -1;
                     }
+
                     goto restart;
                 }
             }
@@ -321,10 +322,13 @@ public static class DivisionDataGeneration {
 
                         //If the neighbor and hex indexes arent the same
                         //And the neighbor index wasnt already added to the list,
-                        if (neighborRegionIndex != hex.regionIndex && !adjacentRegions.Contains(neighborRegionIndex) && neighborRegionIndex != -1) {
-
-                            region.adjacentRegions.Add(neighborRegionIndex);
-                            adjacentRegions.Add(neighborRegionIndex);
+                        if (neighborRegionIndex != hex.regionIndex) {
+                            if (!adjacentRegions.Contains(neighborRegionIndex)) {
+                                if (neighborRegionIndex != -1) {
+                                    region.adjacentRegions.Add(neighborRegionIndex);
+                                    adjacentRegions.Add(neighborRegionIndex);
+                                }
+                            }
                         }
                     }
                 }

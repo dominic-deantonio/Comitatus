@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class FactionDataGeneration {
 
     public static void AssignDivisionalCulture() {
 
-        //First get the relevant percentages from the data previously collected
+        //First get the relevant comparator from the data previously collected
         foreach (Region reg in MapData.regions) {
             reg.taigaPercent = Region.GetBiomePercent(reg, Hex.Biome.Taiga);
             reg.desertPercent = Region.GetBiomePercent(reg, Hex.Biome.HotDesert);
@@ -16,9 +17,8 @@ public static class FactionDataGeneration {
         }
 
         //Then compare the relevant values of each region and assign
-
         for (int i = 0; i < 6; i++) {
-
+            List<Region> regions = new List<Region>();
             Region taiga = new Region(), desert = new Region(), tundra = new Region(), grass = new Region(), forest = new Region(), marsh = new Region();
             foreach (Region region in MapData.regions) {
                 if (region.startCulture == -1) {
@@ -42,28 +42,32 @@ public static class FactionDataGeneration {
                 }
             }
 
-            switch (i) {
-                case 0:
-                    MapData.regions[MapData.regions.IndexOf(marsh)].startCulture = (int)Culture.Name.Estish;
-                    break;
-                case 1:
-                    MapData.regions[MapData.regions.IndexOf(tundra)].startCulture = (int)Culture.Name.Kaltan;
-                    break;
-                case 2:
-                    MapData.regions[MapData.regions.IndexOf(desert)].startCulture = (int)Culture.Name.Boskari;
-                    break;
-                case 3:
-                    MapData.regions[MapData.regions.IndexOf(grass)].startCulture = (int)Culture.Name.Montisan;
-                    break;
-                case 4:
-                    MapData.regions[MapData.regions.IndexOf(taiga)].startCulture = (int)Culture.Name.Strovian;
-                    break;
-                case 5:
-                    MapData.regions[MapData.regions.IndexOf(forest)].startCulture = (int)Culture.Name.Afonic;
-                    break;
+            regions.Add(marsh);
+            regions.Add(tundra);
+            regions.Add(desert);
+            regions.Add(grass);
+            regions.Add(taiga);
+            regions.Add(forest);
 
+            AssignCultureToRegion(regions, i);
+        }
+    }
+
+    static void AssignCultureToRegion(List<Region> options, int i) {
+
+        try {
+            MapData.regions[MapData.regions.IndexOf(options[i])].startCulture = i;
+        } catch (Exception e) {
+            var j = e.Source; // This is here just so the compiler doesn't keep warning me about it. Exception was handled.
+            foreach (Region region in MapData.regions) {
+                if (region.startCulture == -1) {
+                    region.startCulture = i;
+                }
+                Debug.Log("Couldn't place " + ((Culture.Name)i).ToString() + " into related biome - assigned iteratively");
+                break;
             }
         }
+
     }
 }
 

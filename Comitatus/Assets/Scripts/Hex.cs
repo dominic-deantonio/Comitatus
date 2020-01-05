@@ -56,7 +56,9 @@ public class Hex {
             "\nCoastal: " + isCoast +
             "\nAbove sea level: " + isAboveSeaLevel +
             "\nPosition xyz: " + position.x + ", " + position.y + ", " + position.z +
-            "\nLandmass index: " + landmassIndex;
+            "\nLandmass index: " + landmassIndex +
+            "\nRegion index: " + regionIndex +
+            "\nCounty index: " + countyIndex;
 
 
         return s;

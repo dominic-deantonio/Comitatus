@@ -202,11 +202,16 @@ public class MapGeneration : MonoBehaviour {
             l.name = FlavorMap.GetGeneratedName();
         }
         foreach (Region reg in MapData.regions) {
-            float r = Random.Range(0f, 1f);
-            float g = Random.Range(0f, 1f);
-            float b = Random.Range(0f, 1f);
-            reg.color = new Color(r, g, b);
-            reg.name = FlavorMap.GetGeneratedName();
+            if (reg.startCulture == -1) {
+                float r = Random.Range(0f, 1f);
+                float g = Random.Range(0f, 1f);
+                float b = Random.Range(0f, 1f);
+                reg.color = new Color(r, g, b);
+                reg.name = FlavorMap.GetGeneratedName();
+            } else {
+                reg.color = Culture.color[reg.startCulture];
+                reg.name = ((Culture.PlaceName)reg.startCulture).ToString();
+            }
         }
         foreach (County c in MapData.counties) {
             float r = Random.Range(0f, 1f);
