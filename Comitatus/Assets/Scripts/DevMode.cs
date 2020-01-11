@@ -21,12 +21,15 @@ public class DevMode : MonoBehaviour {
     TextMeshProUGUI generalMapInfo;
     TextMeshProUGUI selectDataDisplay;
     Ray hexRay;
+    RTS_CamHelper camHelper;
+
 
     void Start() {
         genNewMapButton = GameObject.Find("GenNewMap").GetComponent<Button>();
         autogenButtonLabel = GameObject.Find("Autogen").GetComponentInChildren<TextMeshProUGUI>();
         generalMapInfo = devPanel.transform.Find("MapData").gameObject.GetComponent<TextMeshProUGUI>();
         selectDataDisplay = devPanel.transform.Find("SelectedData").gameObject.GetComponent<TextMeshProUGUI>();
+        camHelper = GameObject.Find("RTS_Camera").GetComponent<RTS_CamHelper>();
     }
 
     void Update() {
@@ -158,6 +161,22 @@ public class DevMode : MonoBehaviour {
             genNewMapButton.interactable = false;
         } else {
             genNewMapButton.interactable = true;
+        }
+    }
+
+    public void ToggleCamControl() {
+        if (RTS_CamHelper.camControlsEnabled) {
+            camHelper.DisableCamControls();
+        } else {
+            camHelper.EnableCamControls();
+        }
+    }
+
+    public void ToggleCamZoomLock() {
+        if (RTS_CamHelper.lockZoom) {
+            camHelper.EnableZoom();
+        } else {
+            camHelper.DisableZoom();
         }
     }
 }

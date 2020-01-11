@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 public class MapGeneration : MonoBehaviour {
 
     public static bool currentlyGenerating = false;
-    
-    
+
+
     public Grid grid;
     public Tile tileToSet;
     public HexAssets assets;
@@ -19,9 +19,10 @@ public class MapGeneration : MonoBehaviour {
 
     private void Start() {
         ui = GameObject.Find("UIManager").GetComponent<UI>();
+        GenerateMap();
     }
 
-    public void ToggleAutogenerator() {       
+    public void ToggleAutogenerator() {
         if (DevMode.shouldAutogen) {
             DevMode.shouldAutogen = false;
 
@@ -36,7 +37,7 @@ public class MapGeneration : MonoBehaviour {
 
     IEnumerator Autogenerate(float t = 6f) {
         while (DevMode.shouldAutogen) {
-            GenerateMap();            
+            GenerateMap();
             yield return new WaitForSeconds(t);
         }
     }
@@ -83,6 +84,7 @@ public class MapGeneration : MonoBehaviour {
             DivisionDataGeneration.IncorporateRemainingHexesToRegions();
             DivisionDataGeneration.GenerateCountyData();
             DivisionDataGeneration.IncorporateRemainingHexesToCounties();
+            DivisionDataGeneration.UpdateCollections();
             DivisionDataGeneration.AssignAdjacencies();
             DivisionDataGeneration.CollectData();
             FactionDataGeneration.AssignDivisionalCulture();
