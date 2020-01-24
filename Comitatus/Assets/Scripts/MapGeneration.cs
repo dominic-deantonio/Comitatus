@@ -42,7 +42,6 @@ public class MapGeneration : MonoBehaviour {
         }
     }
 
-    //Keep an eye out for dependencies here - make sure the order stays correct as methods evolve.
     public void GenerateMap() {
         Generate();
     }
@@ -107,6 +106,7 @@ public class MapGeneration : MonoBehaviour {
         MapData.didGenerateMap = true;
         currentlyGenerating = false;
         ui.LoadIcon(false);
+        FactionDataGeneration.GetRegionDensity();
     }
 
     void InstantiateHexes() {
@@ -197,18 +197,12 @@ public class MapGeneration : MonoBehaviour {
     //Call after they exist (divisiondatageneration)
     void FlavorizeDivisions() {
         foreach (Landmass l in MapData.landmasses) {
-            float r = Random.Range(0f, 1f);
-            float g = Random.Range(0f, 1f);
-            float b = Random.Range(0f, 1f);
-            l.color = new Color(r, g, b);
+            l.color = Utility.GetRandomColor();
             l.name = FlavorMap.GetGeneratedName();
         }
         foreach (Region reg in MapData.regions) {
             if (reg.startCulture == -1) {
-                float r = Random.Range(0f, 1f);
-                float g = Random.Range(0f, 1f);
-                float b = Random.Range(0f, 1f);
-                reg.color = new Color(r, g, b);
+                reg.color = Utility.GetRandomColor();
                 reg.name = FlavorMap.GetGeneratedName();
             } else {
                 reg.color = Culture.color[reg.startCulture];
@@ -216,10 +210,7 @@ public class MapGeneration : MonoBehaviour {
             }
         }
         foreach (County c in MapData.counties) {
-            float r = Random.Range(0f, 1f);
-            float g = Random.Range(0f, 1f);
-            float b = Random.Range(0f, 1f);
-            c.color = new Color(r, g, b);
+            c.color = Utility.GetRandomColor();
             c.name = FlavorMap.GetGeneratedName();
         }
     }

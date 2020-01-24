@@ -7,17 +7,5 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
-    guid: 84eebb501a8c28c48ac13d2cd5c5bc11
-  - enabled: 1
-    path: Assets/Scenes/CreatePlayer.unity
-    guid: cc45c83b1779bc44facf256f7ba97b1c
-  - enabled: 1
-    path: Assets/Scenes/GenerateWorld.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
-  - enabled: 1
-    path: Assets/Scenes/Battle.unity
-    guid: cfd386573a38c1347883effab80dacc2
-  - enabled: 1
-    path: Assets/Scenes/World.unity
-    guid: 44402c35531942f43bdad299ed5601a8
+    guid: b1a0e728b9a87814c86b46ca6b523804
   m_configObjects: {}

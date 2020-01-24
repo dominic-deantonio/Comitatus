@@ -69,5 +69,23 @@ public static class FactionDataGeneration {
         }
 
     }
+
+    public static void GetRegionDensity() {
+        //Get the smallest region so we know the max density
+        int smallest = 10000;
+        Region region = new Region();
+        foreach (Region reg in MapData.regions) {
+            if (reg.startCulture != -1) {
+                if (reg.includedHexes.Count < smallest)
+                    region = reg;
+            }
+        }
+
+        Debug.Log("Smallest region is " + region.name);
+
+
+
+
+    }
 }
 
