@@ -81,7 +81,7 @@ public static class FactionDataGeneration {
             }
         }
 
-        Debug.Log("Smallest region is " + region.name);
+        //Debug.Log("Smallest region is " + region.name);
 
 
 

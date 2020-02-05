@@ -15,10 +15,10 @@ public class MapGeneration : MonoBehaviour {
     public GameObject hexContainer, natureContainer;
     public RTS_CamHelper camHelper;
     public Tilemap fertilityMap, rainfallMap, temperatureMap, elevationMap, countyMap, regionMap, landmassMap;
-    UI ui;
+    UI_Global ui;
 
     private void Start() {
-        ui = GameObject.Find("UIManager").GetComponent<UI>();
+        ui = GameObject.Find("UI_GlobalManager").GetComponent<UI_Global>();
         GenerateMap();
     }
 
@@ -50,7 +50,7 @@ public class MapGeneration : MonoBehaviour {
     async void Generate() {
         MapData.didGenerateMap = false;
         currentlyGenerating = true;
-        ui.LoadIcon(true);
+        ui.SetActiveLoadingIcon(true);
 
         MapData.ClearData();
         MapData.GetPreferences();
@@ -105,7 +105,7 @@ public class MapGeneration : MonoBehaviour {
 
         MapData.didGenerateMap = true;
         currentlyGenerating = false;
-        ui.LoadIcon(false);
+        ui.SetActiveLoadingIcon(false);
         FactionDataGeneration.GetRegionDensity();
     }
 

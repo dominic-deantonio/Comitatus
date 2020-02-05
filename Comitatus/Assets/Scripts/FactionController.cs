@@ -17,7 +17,7 @@ public class FactionController : MonoBehaviour {
         data = GetComponent<FactionData>();
         data.Initialize();
         gameObject.name = "Faction" + data.id.ToString();
-        avatar = transform.Find("Avatar").gameObject;
+
     }
 
 
